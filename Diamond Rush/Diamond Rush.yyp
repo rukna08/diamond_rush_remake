@@ -34,12 +34,14 @@
   },
   "name":"Diamond Rush",
   "resources":[
-    {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"object_player","path":"objects/object_player/object_player.yy",},},
+    {"id":{"name":"room_sandbox","path":"rooms/room_sandbox/room_sandbox.yy",},},
+    {"id":{"name":"sprite_player","path":"sprites/sprite_player/sprite_player.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"roomId":{"name":"room_sandbox","path":"rooms/room_sandbox/room_sandbox.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[
