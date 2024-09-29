@@ -1,9 +1,11 @@
 /// @description Insert description here
 // You can write your code in this editor
 
-is_moving = false
+is_moving_x = false
+is_moving_y = false
 
-desired_position = undefined
+desired_position_x = undefined
+desired_position_y = undefined
 
 // Set the value to a factor of 64.
 // Tile size is 64.
