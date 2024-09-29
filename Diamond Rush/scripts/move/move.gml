@@ -23,7 +23,7 @@ function move(){
 		}
 	}
 	
-	if(x == desired_position_x || desired_position_x == undefined) {
+	if(!is_moving_y && (x == desired_position_x || desired_position_x == undefined)) {
 		is_moving_x = false;
 		if(keyboard_check(ord("A"))) {
 			is_moving_x = true;
@@ -36,7 +36,7 @@ function move(){
 		}		
 	}
 	
-	if(y == desired_position_y || desired_position_y == undefined) {
+	if(!is_moving_x && (y == desired_position_y || desired_position_y == undefined)) {
 		is_moving_y = false;
 		if(keyboard_check(ord("W"))) {
 			is_moving_y = true;
