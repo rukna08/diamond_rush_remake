@@ -35,9 +35,11 @@
   "name":"Diamond Rush",
   "resources":[
     {"id":{"name":"object_player","path":"objects/object_player/object_player.yy",},},
+    {"id":{"name":"object_tile","path":"objects/object_tile/object_tile.yy",},},
     {"id":{"name":"room_sandbox","path":"rooms/room_sandbox/room_sandbox.yy",},},
     {"id":{"name":"player_move","path":"scripts/player_move/player_move.yy",},},
     {"id":{"name":"sprite_player","path":"sprites/sprite_player/sprite_player.yy",},},
+    {"id":{"name":"sprite_tile","path":"sprites/sprite_tile/sprite_tile.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
