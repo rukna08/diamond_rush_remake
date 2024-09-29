@@ -9,3 +9,5 @@ desired_position = undefined
 // Tile size is 64.
 // If set to 3 for example, then the position will never hit 64.
 move_speed = 8
+
+move_direction = undefined
