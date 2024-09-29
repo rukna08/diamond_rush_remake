@@ -3,7 +3,7 @@
 
 
 if(is_moving == true) {
-	x++;
+	x += 1 * move_speed;
 }
 
 if(keyboard_check(ord("D"))) {
