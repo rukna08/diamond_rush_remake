@@ -1,6 +1,16 @@
 
 function player_move(){
 	
+	if(place_meeting(x + 1, y, object_tile)) {
+		show_debug_message("Can't go to the right tile");
+	} else if(place_meeting(x - 1, y, object_tile)) {
+		show_debug_message("Can't go to the left tile");
+	} else if(place_meeting(x, y + 1, object_tile)) {
+		show_debug_message("Can't go to the bottom tile");
+	} else if(place_meeting(x, y - 1, object_tile)) {
+		show_debug_message("Can't go to the upper tile");
+	}
+	
 	if(is_moving_x == true) {
 		switch(move_direction) {
 			case "left": 
