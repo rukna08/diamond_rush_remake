@@ -1,5 +1,5 @@
 
-function move(){
+function player_move(){
 	
 	if(is_moving_x == true) {
 		switch(move_direction) {
@@ -33,7 +33,7 @@ function move(){
 			is_moving_x = true;
 			desired_position_x = x + 64;
 			move_direction = "right";
-		}		
+		}
 	}
 	
 	if(!is_moving_x && (y == desired_position_y || desired_position_y == undefined)) {

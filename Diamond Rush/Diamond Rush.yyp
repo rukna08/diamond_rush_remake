@@ -36,7 +36,7 @@
   "resources":[
     {"id":{"name":"object_player","path":"objects/object_player/object_player.yy",},},
     {"id":{"name":"room_sandbox","path":"rooms/room_sandbox/room_sandbox.yy",},},
-    {"id":{"name":"move","path":"scripts/move/move.yy",},},
+    {"id":{"name":"player_move","path":"scripts/player_move/player_move.yy",},},
     {"id":{"name":"sprite_player","path":"sprites/sprite_player/sprite_player.yy",},},
   ],
   "resourceType":"GMProject",

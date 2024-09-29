@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"move",
+  "%Name":"player_move",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"move",
+  "name":"player_move",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

@@ -2,4 +2,4 @@
 // You can write your code in this editor
 
 
-move();
+player_move();
