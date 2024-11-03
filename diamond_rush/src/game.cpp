@@ -1,9 +1,20 @@
-#include <iostream>
 
-int main() {
-	
-	std::cout << "diamond rush!!!" << std::endl;
 
-	std::cin.get();
+
+#include <SDL.h>
+
+
+
+int main(int argc, char* argv[]) {
+    
+
+
+    // Clean slate.
+
+
+
+    return 0;
+
+
 
 }
