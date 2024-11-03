@@ -1,4 +1,4 @@
-# diamond_rush_clone
-Clone - Diamond Rush
+# diamond_rush_remake
+Remake - Diamond Rush
 
 Made with Love.
