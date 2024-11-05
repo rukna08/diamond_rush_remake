@@ -6,17 +6,22 @@
 
 #include <string>
 
+SDL_Window* window;
+SDL_Renderer* renderer;
 
 class Player {
 public:
     SDL_Rect rect = { 0, 0, 64, 64 };
+    SDL_Texture* texture;
+    Player() {
+        texture = IMG_LoadTexture(renderer, "data/sprite_player.png");
+    }
 };
 
 
-SDL_Window* window;
-SDL_Renderer* renderer;
-SDL_Texture* texture_player;
-Player player;
+
+
+Player* player;
 
 
 
@@ -34,7 +39,7 @@ int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_CreateWindowAndRenderer(1920, 1080, SDL_WINDOW_FULLSCREEN, &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
-    texture_player = IMG_LoadTexture(renderer, "data/sprite_player.png");
+    player = new Player();
     while (is_game_running) {
         draw();
         process_input();
@@ -51,7 +56,7 @@ int main(int argc, char* argv[]) {
 void draw() {
     SDL_FillRect(SDL_GetWindowSurface(window), 0, SDL_MapRGB(SDL_GetWindowSurface(window)->format, 255, 0, 255));
     SDL_UpdateWindowSurface(window);
-    SDL_RenderCopy(renderer, texture_player, 0, &player.rect);
+    SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
     SDL_RenderPresent(renderer);
 }
 
