@@ -6,8 +6,11 @@
 
 #include <string>
 
+class Player;
+
 SDL_Window* window;
 SDL_Renderer* renderer;
+Player* player;
 
 class Player {
 public:
@@ -15,43 +18,72 @@ public:
     SDL_Texture* texture;
     int destination;
     bool can_move_right;
+    bool can_move_left;
+    bool can_move_up;
+    bool can_move_down;
     Player() {
         destination = 0;
         can_move_right = false;
+        can_move_left = false;
+        can_move_up = false;
+        can_move_down = false;
         texture = IMG_LoadTexture(renderer, "data/sprite_player.png");
     }
     void move(const std::string& direction) {
-        if (direction == "right") {
-            destination = rect.x + SPRITE_SIZE;
-            can_move_right = true;
-        }
-        else if (direction == "left") {
-            rect.x -= SPRITE_SIZE;
-        }
-        else if (direction == "up") {
-            rect.y -= SPRITE_SIZE;
-        }
-        else if (direction == "down") {
-            rect.y += SPRITE_SIZE;
+        if (!can_move_up && !can_move_down && !can_move_left && !can_move_right) {
+            if (direction == "right") {
+                destination = rect.x + SPRITE_SIZE;
+                can_move_right = true;
+            } else if (direction == "left") {
+                destination = rect.x - SPRITE_SIZE;
+                can_move_left = true;
+            } else if (direction == "up") {
+                destination = rect.y - SPRITE_SIZE;
+                can_move_up = true;
+            } else if (direction == "down") {
+                destination = rect.y + SPRITE_SIZE;
+                can_move_down = true;
+            }
         }
     }
     void move_constant_right() {
-
         if (rect.x == destination) {
             can_move_right = false;
         }
-
         if (can_move_right && rect.x < destination) {
             rect.x++;
         }
-        
+    }
+    void move_constant_left() {
+        if (rect.x == destination) {
+            can_move_left = false;
+        }
+        if (can_move_left && rect.x > destination) {
+            rect.x--;
+        }
+    }
+    void move_constant_down() {
+        if (rect.y == destination) {
+            can_move_down = false;
+        }
+        if (can_move_down && rect.y < destination) {
+            rect.y++;
+        }
+    }
+    void move_constant_up() {
+        if (rect.y == destination) {
+            can_move_up = false;
+        }
+        if (can_move_up && rect.y > destination) {
+            rect.y--;
+        }
     }
 };
 
 
 
 
-Player* player;
+
 
 
 
@@ -74,6 +106,9 @@ int main(int argc, char* argv[]) {
         draw();
         process_input();
         player->move_constant_right();
+        player->move_constant_left();
+        player->move_constant_up();
+        player->move_constant_down();
     }
     IMG_Quit();
     SDL_DestroyWindow(window);
