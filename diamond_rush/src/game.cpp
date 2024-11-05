@@ -2,15 +2,37 @@
 
 
 #include <SDL.h>
+#include <SDL_image.h>
+
+#include <string>
+
 
 
 
 SDL_Window* window;
+SDL_Renderer* renderer;
+SDL_Texture* texture_player;
 
 
 
 void draw();
 void process_input();
+
+
+
+// & is reference. it is modern pointer
+void draw_sprite(std::string& location) {
+    
+
+    SDL_Surface* surface = 0;
+
+    // TODO: Complete the function.
+
+
+}
+
+
+
 
 bool is_game_running = true;
 
@@ -24,8 +46,11 @@ int main(int argc, char* argv[]) {
 
 
 
-    window = SDL_CreateWindow("Diamond Rush Remake", 0, 0, 1920, 1080, SDL_WINDOW_FULLSCREEN);
-    
+    SDL_CreateWindowAndRenderer(1920, 1080, SDL_WINDOW_FULLSCREEN, &window, &renderer);
+    IMG_Init(IMG_INIT_PNG);
+
+    texture_player = IMG_LoadTexture(renderer, "data/sprite_player.png");
+
     while (is_game_running) {
 
         draw();
@@ -37,6 +62,14 @@ int main(int argc, char* argv[]) {
 
 
 
+    IMG_Quit();
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
+
+    
+    
+    
     return 0;
 
 
@@ -53,7 +86,9 @@ void draw() {
     SDL_FillRect(SDL_GetWindowSurface(window), 0, SDL_MapRGB(SDL_GetWindowSurface(window)->format, 255, 0, 255));
     SDL_UpdateWindowSurface(window);
 
-
+    
+    SDL_RenderCopy(renderer, texture_player, 0, 0);
+    SDL_RenderPresent(renderer);
 
 }
 
