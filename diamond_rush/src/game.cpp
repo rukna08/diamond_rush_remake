@@ -13,6 +13,9 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* texture_player;
 
+// x, y, w, h
+SDL_Rect rect_player = { 0, 0, 64, 64 };
+
 
 
 void draw();
@@ -20,7 +23,7 @@ void process_input();
 
 
 
-// & is reference. it is modern pointer
+// & is reference. It is modern c++ equivalent pointer without the * and -> operators.
 void draw_sprite(std::string& location) {
     
 
@@ -50,6 +53,7 @@ int main(int argc, char* argv[]) {
     IMG_Init(IMG_INIT_PNG);
 
     texture_player = IMG_LoadTexture(renderer, "data/sprite_player.png");
+    
 
     while (is_game_running) {
 
@@ -87,7 +91,7 @@ void draw() {
     SDL_UpdateWindowSurface(window);
 
     
-    SDL_RenderCopy(renderer, texture_player, 0, 0);
+    SDL_RenderCopy(renderer, texture_player, 0, &rect_player);
     SDL_RenderPresent(renderer);
 
 }
