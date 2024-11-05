@@ -13,12 +13,17 @@ class Player {
 public:
     SDL_Rect rect = { 0, 0, SPRITE_SIZE, SPRITE_SIZE };
     SDL_Texture* texture;
+    int destination;
+    bool can_move_right;
     Player() {
+        destination = 0;
+        can_move_right = false;
         texture = IMG_LoadTexture(renderer, "data/sprite_player.png");
     }
     void move(const std::string& direction) {
         if (direction == "right") {
-            rect.x += SPRITE_SIZE;
+            destination = rect.x + SPRITE_SIZE;
+            can_move_right = true;
         }
         else if (direction == "left") {
             rect.x -= SPRITE_SIZE;
@@ -29,6 +34,17 @@ public:
         else if (direction == "down") {
             rect.y += SPRITE_SIZE;
         }
+    }
+    void move_constant_right() {
+
+        if (rect.x == destination) {
+            can_move_right = false;
+        }
+
+        if (can_move_right && rect.x < destination) {
+            rect.x++;
+        }
+        
     }
 };
 
@@ -57,6 +73,7 @@ int main(int argc, char* argv[]) {
     while (is_game_running) {
         draw();
         process_input();
+        player->move_constant_right();
     }
     IMG_Quit();
     SDL_DestroyWindow(window);
