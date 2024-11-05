@@ -1,4 +1,4 @@
-
+#define SPRITE_SIZE 64
 
 
 #include <SDL.h>
@@ -11,10 +11,24 @@ SDL_Renderer* renderer;
 
 class Player {
 public:
-    SDL_Rect rect = { 0, 0, 64, 64 };
+    SDL_Rect rect = { 0, 0, SPRITE_SIZE, SPRITE_SIZE };
     SDL_Texture* texture;
     Player() {
         texture = IMG_LoadTexture(renderer, "data/sprite_player.png");
+    }
+    void move(const std::string& direction) {
+        if (direction == "right") {
+            rect.x += SPRITE_SIZE;
+        }
+        else if (direction == "left") {
+            rect.x -= SPRITE_SIZE;
+        }
+        else if (direction == "up") {
+            rect.y -= SPRITE_SIZE;
+        }
+        else if (direction == "down") {
+            rect.y += SPRITE_SIZE;
+        }
     }
 };
 
@@ -58,6 +72,7 @@ void draw() {
     SDL_UpdateWindowSurface(window);
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
     SDL_RenderPresent(renderer);
+    SDL_RenderClear(renderer);
 }
 
 
@@ -69,6 +84,18 @@ void process_input() {
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     is_game_running = false;
+                }
+                if (event.key.keysym.sym == SDLK_w) {
+                    player->move("up");
+                }
+                if (event.key.keysym.sym == SDLK_a) {
+                    player->move("left");
+                }
+                if (event.key.keysym.sym == SDLK_s) {
+                    player->move("down");
+                }
+                if (event.key.keysym.sym == SDLK_d) {
+                    player->move("right");
                 }
             break;
         }
