@@ -82,19 +82,11 @@ public:
 
 
 
-
-
-
-
-
-
 void draw();
 void process_input();
 
 
-
 bool is_game_running = true;
-
 
 
 int main(int argc, char* argv[]) {
@@ -120,8 +112,7 @@ int main(int argc, char* argv[]) {
 
 
 void draw() {
-    SDL_FillRect(SDL_GetWindowSurface(window), 0, SDL_MapRGB(SDL_GetWindowSurface(window)->format, 255, 0, 255));
-    SDL_UpdateWindowSurface(window);
+    SDL_SetRenderDrawColor(renderer, 173, 216, 230, 255);
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
