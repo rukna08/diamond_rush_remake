@@ -51,6 +51,11 @@ int main(int argc, char* argv[]) {
         player->move_constant_up();
         player->move_constant_down();
     }
+
+
+
+
+    // Unload
     IMG_Quit();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
