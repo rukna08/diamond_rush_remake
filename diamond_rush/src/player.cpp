@@ -1,7 +1,7 @@
 #include "player.h"
 
-Player::Player(SDL_Renderer* renderer) {
-    rect = { 0+SPRITE_SIZE, 0+SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE };
+Player::Player(SDL_Renderer* renderer, int unit_x, int unit_y) {
+    rect = { unit_x * SPRITE_SIZE, unit_y * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE };
     destination = 0;
     can_move_right = false;
     can_move_left = false;
@@ -64,5 +64,25 @@ void Player::move_constant_up() {
     }
     if (can_move_up && rect.y > destination) {
         rect.y--;
+    }
+}
+
+void Player::check_collision(const std::vector<Wall>& walls) {
+    
+    SDL_Point right_tile_point = { rect.x + (SPRITE_SIZE), rect.y };
+    SDL_Point left_tile_point  = { rect.x - 1, rect.y };
+    SDL_Point up_tile_point    = { rect.x, rect.y - 1 };
+    SDL_Point down_tile_point  = { rect.x, rect.y + SPRITE_SIZE };
+
+    for (int i = 0; i < walls.size(); i++) {
+        if (SDL_PointInRect(&right_tile_point, &walls[i].rect)) {
+            can_move_right = false;
+        } else if (SDL_PointInRect(&left_tile_point, &walls[i].rect)) {
+            can_move_left  = false;
+        } else if (SDL_PointInRect(&up_tile_point, &walls[i].rect)) {
+            can_move_up    = false;
+        } else if (SDL_PointInRect(&down_tile_point, &walls[i].rect)) {
+            can_move_down  = false;
+        }
     }
 }

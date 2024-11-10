@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP, &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
-    player = new Player(renderer);
+    player = new Player(renderer, 2, 2);
     
 
 
@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
         draw();
         draw_wall(walls);
         process_input();
+        player->check_collision(walls);
         player->move_constant_right();
         player->move_constant_left();
         player->move_constant_up();

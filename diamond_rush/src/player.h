@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string>
+#include <vector>
+#include "wall.h"
 
 #define SPRITE_SIZE 64
 
@@ -17,12 +19,13 @@ public:
     bool can_move_up;
     bool can_move_down;
 
-    Player(SDL_Renderer* renderer);
+    Player(SDL_Renderer* renderer, int unit_x, int unit_y);
     void move(const std::string& direction);
     void move_constant_right();
     void move_constant_left();
     void move_constant_down();
     void move_constant_up();
+    void check_collision(const std::vector<Wall>& walls);
 };
 
 #endif
