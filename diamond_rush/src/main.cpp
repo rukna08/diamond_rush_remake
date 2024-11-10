@@ -13,6 +13,7 @@
 SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
+std::vector<Wall> walls;
 
 bool is_game_running = true;
 
@@ -20,6 +21,7 @@ bool is_game_running = true;
 void draw();
 void draw_wall(std::vector<Wall>);
 void process_input();
+void place_wall(int, int);
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
@@ -27,26 +29,14 @@ int main(int argc, char* argv[]) {
     IMG_Init(IMG_INIT_PNG);
     player = new Player(renderer);
     
-    std::vector<Wall> walls;
 
-    for (int i = 0; i < 10; i++) {
-        walls.emplace_back(SPRITE_SIZE*i,0, renderer);
-    }
-    for (int i = 0; i < 10; i++) {
-        walls.emplace_back(0, SPRITE_SIZE * i, renderer);
-    }
 
-    for (int i = 6; i < 15; i++) {
-        walls.emplace_back(SPRITE_SIZE * i, SPRITE_SIZE * 7, renderer);
-    }
-
-    for (int i = 0; i < 8; i++) {
-        walls.emplace_back(SPRITE_SIZE * 9, SPRITE_SIZE * i, renderer);
-    }
-
-    for (int i = 0; i < 15; i++) {
-        walls.emplace_back(SPRITE_SIZE * i, SPRITE_SIZE * 9, renderer);
-    }
+    // Wall Placement
+    for (int i = 0; i < 10; i++) place_wall(i, 0);
+    for (int i = 0; i < 10; i++) place_wall(0, i);
+    for (int i = 6; i < 15; i++) place_wall(i, 7);
+    for (int i = 0; i < 8;  i++) place_wall(9, i);
+    for (int i = 0; i < 15; i++) place_wall(i, 9);
 
 
     
@@ -71,7 +61,6 @@ int main(int argc, char* argv[]) {
 void draw() {
     SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
-    //SDL_RenderCopy(renderer, wall->texture, 0, &wall->rect);
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 }
@@ -107,6 +96,6 @@ void process_input() {
     }
 }
 // TODO
-//void place_wall(const std::vector<Wall>& walls, int x, int y) {
-//    walls.emplace_back(x, y, renderer);
-//}
+void place_wall(int unit_x, int unit_y) {
+    walls.emplace_back(SPRITE_SIZE * unit_x, SPRITE_SIZE * unit_y, renderer);
+}
