@@ -1,6 +1,6 @@
 #define SPRITE_SIZE 64
-#define WINDOW_RES_X 1920
-#define WINDOW_RES_Y 1080
+#define WINDOW_RES_X 1280
+#define WINDOW_RES_Y 720
 
 
 #include <SDL.h>
@@ -13,7 +13,6 @@
 SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
-Wall* wall;
 
 bool is_game_running = true;
 
@@ -24,11 +23,9 @@ void process_input();
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_FULLSCREEN, &window, &renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP, &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
-    player = new Player(renderer); 
-    
-    // Creating a array of wall pointer objects 
+    player = new Player(renderer);
     
     std::vector<Wall> walls;
 
@@ -72,7 +69,7 @@ int main(int argc, char* argv[]) {
 }
 
 void draw() {
-    SDL_SetRenderDrawColor(renderer, 173, 216, 230, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
     //SDL_RenderCopy(renderer, wall->texture, 0, &wall->rect);
     SDL_RenderPresent(renderer);
