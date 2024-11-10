@@ -1,6 +1,6 @@
 #define SPRITE_SIZE 64
 #define WINDOW_RES_X 1280
-#define WINDOW_RES_Y 720
+#define WINDOW_RES_Y 1000
 
 
 #include <SDL.h>
@@ -75,23 +75,31 @@ void process_input() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                is_game_running = false;
-            }
-            if (event.key.keysym.sym == SDLK_w) {
-                player->move("up");
-            }
-            if (event.key.keysym.sym == SDLK_a) {
-                player->move("left");
-            }
-            if (event.key.keysym.sym == SDLK_s) {
-                player->move("down");
-            }
-            if (event.key.keysym.sym == SDLK_d) {
-                player->move("right");
-            }
+            
+        
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_ESCAPE) {
+                    is_game_running = false;
+                }
+                if (event.key.keysym.sym == SDLK_w) {
+                    player->move("up");
+                }
+                if (event.key.keysym.sym == SDLK_a) {
+                    player->move("left");
+                }
+                if (event.key.keysym.sym == SDLK_s) {
+                    player->move("down");
+                }
+                if (event.key.keysym.sym == SDLK_d) {
+                    player->move("right");
+                }
             break;
+        
+            case SDL_QUIT:
+                is_game_running = false;
+            break;
+
+
         }
     }
 }
