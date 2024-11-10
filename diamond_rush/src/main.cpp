@@ -1,6 +1,6 @@
 #define SPRITE_SIZE 64
-#define WINDOW_RES_X 1080
-#define WINDOW_RES_Y 720
+#define WINDOW_RES_X 1920
+#define WINDOW_RES_Y 1080
 
 
 #include <SDL.h>
@@ -16,11 +16,10 @@ Player* player;
 Wall* wall;
 
 bool is_game_running = true;
-const int wallNumber = 10;
 
 
 void draw();
-void draw_wall(int, std::vector<Wall>);
+void draw_wall(std::vector<Wall>);
 void process_input();
 
 int main(int argc, char* argv[]) {
@@ -32,27 +31,33 @@ int main(int argc, char* argv[]) {
     // Creating a array of wall pointer objects 
     
     std::vector<Wall> walls;
-    //On Horizontal (TOP) Side
-    for (int i = 0; i <= wallNumber; i++) {
+
+    for (int i = 0; i < 10; i++) {
         walls.emplace_back(SPRITE_SIZE*i,0, renderer);
     }
-    //On Vertical (LEFT) Side
-    for (int i = 0; i <= wallNumber; i++) {
+    for (int i = 0; i < 10; i++) {
         walls.emplace_back(0, SPRITE_SIZE * i, renderer);
     }
-    //On Horizontal (BOTTOM) Side
-    for (int i = 0; i <= wallNumber; i++) {
-        walls.emplace_back(SPRITE_SIZE * i, WINDOW_RES_Y, renderer);
+
+    for (int i = 6; i < 15; i++) {
+        walls.emplace_back(SPRITE_SIZE * i, SPRITE_SIZE * 7, renderer);
     }
-    //On Vertical (LEFT) Side
-    for (int i = 0; i <= wallNumber; i++) {
-        walls.emplace_back(WINDOW_RES_X, SPRITE_SIZE * i, renderer);
+
+    for (int i = 0; i < 8; i++) {
+        walls.emplace_back(SPRITE_SIZE * 9, SPRITE_SIZE * i, renderer);
     }
+
+    for (int i = 0; i < 15; i++) {
+        walls.emplace_back(SPRITE_SIZE * i, SPRITE_SIZE * 9, renderer);
+    }
+
+
+    
 
     //Game Loop
     while (is_game_running) {
         draw();
-        draw_wall(wallNumber,walls);
+        draw_wall(walls);
         process_input();
         player->move_constant_right();
         player->move_constant_left();
@@ -74,8 +79,8 @@ void draw() {
     SDL_RenderClear(renderer);
 }
 
-void draw_wall(int x,std::vector<Wall> walls) {
-    for (int i = 0; i <= x*4; i++) {
+void draw_wall(std::vector<Wall> walls) {
+    for (int i = 0; i < walls.size(); i++) {
         SDL_RenderCopy(renderer, walls[i].texture, 0, &walls[i].rect);
     }
 }
@@ -104,3 +109,7 @@ void process_input() {
         }
     }
 }
+// TODO
+//void place_wall(const std::vector<Wall>& walls, int x, int y) {
+//    walls.emplace_back(x, y, renderer);
+//}
