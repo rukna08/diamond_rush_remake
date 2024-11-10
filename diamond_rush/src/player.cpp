@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player(SDL_Renderer* renderer) {
-    rect = { 0, 0, SPRITE_SIZE, SPRITE_SIZE };
+    rect = { 0+SPRITE_SIZE, 0+SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE };
     destination = 0;
     can_move_right = false;
     can_move_left = false;

@@ -133,6 +133,10 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\player.h" />
+    <ClCompile Include="src\wall.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

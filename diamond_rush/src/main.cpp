@@ -4,10 +4,12 @@
 #include <SDL_image.h>
 #include <string>
 #include "player.h" 
+#include "wall.h" 
 
 SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
+Wall* wall;
 
 bool is_game_running = true;
 
@@ -18,7 +20,8 @@ int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_CreateWindowAndRenderer(1920, 1080, SDL_WINDOW_FULLSCREEN, &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
-    player = new Player(renderer);  
+    player = new Player(renderer); 
+    wall = new Wall(renderer);
     while (is_game_running) {
         draw();
         process_input();
@@ -37,6 +40,7 @@ int main(int argc, char* argv[]) {
 void draw() {
     SDL_SetRenderDrawColor(renderer, 173, 216, 230, 255);
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+    SDL_RenderCopy(renderer, wall->texture, 0, &wall->rect);
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 }

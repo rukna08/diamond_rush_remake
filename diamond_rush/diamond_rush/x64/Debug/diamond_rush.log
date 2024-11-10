@@ -1,6 +1,4 @@
 ﻿  main.cpp
-  player.cpp
-  player.h
+  wall.cpp
   Generating Code...
-diamond_rush\x64\Debug\player.obj : warning LNK4042: object specified more than once; extras ignored
   diamond_rush.vcxproj -> E:\Projects\diamond_rush_remake\diamond_rush\x64\Debug\diamond_rush.exe

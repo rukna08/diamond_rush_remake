@@ -24,5 +24,13 @@
     <ClCompile Include="src\player.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\wall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\wall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

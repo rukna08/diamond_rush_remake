@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|solutionrelative:src\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|solutionrelative:src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|solutionrelative:src\\player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|solutionrelative:src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\wall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|solutionrelative:src\\wall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\wall.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|solutionrelative:src\\wall.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{241C74B7-572A-4BF3-BCE5-7BA23789BCA1}|diamond_rush.vcxproj|solutionrelative:src\\player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,13 +42,52 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "player.cpp",
+              "DocumentMoniker": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.cpp",
+              "RelativeDocumentMoniker": "src\\player.cpp",
+              "ToolTip": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.cpp",
+              "RelativeToolTip": "src\\player.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-11-10T05:42:39.486Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "wall.h",
+              "DocumentMoniker": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\wall.h",
+              "RelativeDocumentMoniker": "src\\wall.h",
+              "ToolTip": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\wall.h",
+              "RelativeToolTip": "src\\wall.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-11-10T05:40:48.158Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "wall.cpp",
+              "DocumentMoniker": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\wall.cpp",
+              "RelativeDocumentMoniker": "src\\wall.cpp",
+              "ToolTip": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\wall.cpp",
+              "RelativeToolTip": "src\\wall.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-11-10T05:40:39.25Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
               "Title": "player.h",
               "DocumentMoniker": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.h",
               "RelativeDocumentMoniker": "src\\player.h",
               "ToolTip": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.h",
               "RelativeToolTip": "src\\player.h",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABMAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-11-09T19:58:54.189Z",
               "EditorCaption": ""
@@ -48,25 +95,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "player.cpp",
-              "DocumentMoniker": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.cpp",
-              "RelativeDocumentMoniker": "src\\player.cpp",
-              "ToolTip": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\player.cpp",
-              "RelativeToolTip": "src\\player.cpp",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAAAAAAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-11-09T19:58:48.294Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "main.cpp",
               "DocumentMoniker": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\main.cpp",
               "RelativeDocumentMoniker": "src\\main.cpp",
               "ToolTip": "E:\\Projects\\diamond_rush_remake\\diamond_rush\\src\\main.cpp",
               "RelativeToolTip": "src\\main.cpp",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABQAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAACwAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-11-09T18:05:29.257Z",
               "EditorCaption": ""
