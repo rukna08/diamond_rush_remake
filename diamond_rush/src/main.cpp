@@ -23,6 +23,7 @@ void draw();
 void draw_wall(std::vector<Wall>);
 void process_input();
 void place_wall(int, int);
+void place_wall_pixels(int x, int y);
 void create_level_grid_rects();
 void show_grid();
 
@@ -110,6 +111,19 @@ void process_input() {
                 is_game_running = false;
             break;
 
+            case SDL_MOUSEBUTTONDOWN:
+                int x = event.motion.x;
+                int y = event.motion.y;
+
+                SDL_Point mouse_position = { x, y };
+
+                for (int i = 0; i < level_grid.size(); i++) {
+                    if (SDL_PointInRect(&mouse_position, level_grid[i])) {
+                        place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+                    }
+                }
+
+            break;
 
         }
     }
@@ -119,17 +133,14 @@ void place_wall(int unit_x, int unit_y) {
     walls.emplace_back(SPRITE_SIZE * unit_x, SPRITE_SIZE * unit_y, renderer);
 }
 
-void create_level_grid_rects() {
-    
-    //
-    //
-    // Creating 512x512 grid for testing.
-    // 512 because it is a multiple of SPRITE_SIZE i.e. 64
-    //
-    //
+void place_wall_pixels(int x, int y) {
+    walls.emplace_back(x, y, renderer);
+}
 
-    for (int y = 0; y <= 512; y += SPRITE_SIZE) {
-        for (int x = 0; x <= 512; x += SPRITE_SIZE) {
+void create_level_grid_rects() {
+
+    for (int y = 0; y < WINDOW_RES_Y; y += SPRITE_SIZE) {
+        for (int x = 0; x < WINDOW_RES_X; x += SPRITE_SIZE) {
             
             level_grid.push_back(new SDL_Rect{ x, y, SPRITE_SIZE, SPRITE_SIZE } );
 
