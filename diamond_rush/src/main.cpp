@@ -1,6 +1,6 @@
 #define SPRITE_SIZE 64
 #define WINDOW_RES_X 1280
-#define WINDOW_RES_Y 1000
+#define WINDOW_RES_Y 720
 
 
 #include <SDL.h>
@@ -14,6 +14,7 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
 std::vector<Wall> walls;
+std::vector<SDL_Rect*> level_grid;
 
 bool is_game_running = true;
 
@@ -22,6 +23,8 @@ void draw();
 void draw_wall(std::vector<Wall>);
 void process_input();
 void place_wall(int, int);
+void create_level_grid_rects();
+void show_grid();
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
@@ -31,17 +34,18 @@ int main(int argc, char* argv[]) {
     
 
 
-    // Wall Placement
+    // Wall Placement.
     for (int i = 0; i < 10; i++) place_wall(i, 0);
     for (int i = 0; i < 10; i++) place_wall(0, i);
     for (int i = 6; i < 15; i++) place_wall(i, 7);
     for (int i = 0; i < 8;  i++) place_wall(9, i);
     for (int i = 0; i < 15; i++) place_wall(i, 9);
 
-
+    // Grid Creation.
+    create_level_grid_rects();
     
 
-    //Game Loop
+    // Game Loop.
     while (is_game_running) {
         draw();
         draw_wall(walls);
@@ -65,8 +69,9 @@ int main(int argc, char* argv[]) {
 }
 
 void draw() {
-    SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+    show_grid();
+    SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 }
@@ -112,4 +117,32 @@ void process_input() {
 // TODO
 void place_wall(int unit_x, int unit_y) {
     walls.emplace_back(SPRITE_SIZE * unit_x, SPRITE_SIZE * unit_y, renderer);
+}
+
+void create_level_grid_rects() {
+    
+    //
+    //
+    // Creating 512x512 grid for testing.
+    // 512 because it is a multiple of SPRITE_SIZE i.e. 64
+    //
+    //
+
+    for (int y = 0; y <= 512; y += SPRITE_SIZE) {
+        for (int x = 0; x <= 512; x += SPRITE_SIZE) {
+            
+            level_grid.push_back(new SDL_Rect{ x, y, SPRITE_SIZE, SPRITE_SIZE } );
+
+        }
+    }
+}
+
+void show_grid() {
+    
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    
+    for (int i = 0; i < level_grid.size(); i++) {
+        SDL_RenderDrawRect(renderer, level_grid[i]);
+    }
+
 }
