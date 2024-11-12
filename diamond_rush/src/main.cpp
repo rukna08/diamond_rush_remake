@@ -16,7 +16,7 @@ Player* player;
 std::vector<Wall> walls;
 std::vector<SDL_Rect*> level_grid;
 
-bool is_game_running = true;
+bool is_game_running = true;    
 
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
@@ -138,11 +138,14 @@ void process_input() {
         }
     }
 }
-// TODO
+
+
+// This is in unit level.
 void place_wall(int unit_x, int unit_y) {
     walls.emplace_back(SPRITE_SIZE * unit_x, SPRITE_SIZE * unit_y, renderer);
 }
 
+// This is in pixel level.
 void place_wall_pixels(int x, int y) {
     walls.emplace_back(x, y, renderer);
 }
