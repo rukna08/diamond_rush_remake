@@ -19,7 +19,7 @@ std::vector<SDL_Rect*> level_grid;
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
-int camera_offset = 10;
+int camera_offset = 20;
 
 
 bool is_game_running = true;    
@@ -38,7 +38,6 @@ void create_level_grid_rects();
 void show_grid();
 void draw_text(std::string, int, int, SDL_Color*);
 void draw_text_init();
-void camrea();
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
