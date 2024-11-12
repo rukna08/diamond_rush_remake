@@ -101,6 +101,14 @@ void draw() {
     SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
     if (engine_mode) draw_text("Engine Mode", 1100, 0, &color_white);
     else draw_text("Game Mode", 1100, 0, &color_white);
+
+
+    if (engine_mode) {
+        // Display Player Position On Screen For Reference.
+        std::string position = std::to_string(player->rect.x) + "," + std::to_string(player->rect.y);
+        draw_text(position, player->rect.x, player->rect.y, &color_white);
+    }
+
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 }
