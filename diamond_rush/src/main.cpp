@@ -18,6 +18,9 @@ std::vector<SDL_Rect*> level_grid;
 
 bool is_game_running = true;
 
+// engine_mode = false is game_mode. ;)
+bool engine_mode = false;
+
 
 void draw();
 void draw_wall(std::vector<Wall>);
@@ -42,8 +45,12 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < 8;  i++) place_wall(9, i);
     for (int i = 0; i < 15; i++) place_wall(i, 9);
 
-    // Grid Creation.
-    create_level_grid_rects();
+    if (engine_mode) {
+
+        // Grid Creation.
+        create_level_grid_rects();
+        
+    }
     
 
     // Game Loop.
@@ -117,11 +124,14 @@ void process_input() {
 
                 SDL_Point mouse_position = { x, y };
 
-                for (int i = 0; i < level_grid.size(); i++) {
-                    if (SDL_PointInRect(&mouse_position, level_grid[i])) {
-                        place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+                if (engine_mode) {
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        if (SDL_PointInRect(&mouse_position, level_grid[i])) {
+                            place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+                        }
                     }
                 }
+
 
             break;
 
