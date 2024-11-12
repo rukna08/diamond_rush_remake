@@ -19,6 +19,9 @@ std::vector<SDL_Rect*> level_grid;
 
 bool is_game_running = true;    
 
+
+// Bug 1: if engine_mode = false, then nothing works.
+// Bug 2: Performance due to text rendering.
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
 
@@ -83,12 +86,10 @@ int main(int argc, char* argv[]) {
 
 void draw() {
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
-    show_grid();
+    if (engine_mode) show_grid();
     SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
-
     if (engine_mode) draw_text("Engine Mode", 1100, 0, &color_white);
     else draw_text("Game Mode", 1100, 0, &color_white);
-
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 }
@@ -121,6 +122,9 @@ void process_input() {
                 if (event.key.keysym.sym == SDLK_d) {
                     player->move("right");
                 }
+                if (event.key.keysym.sym == SDLK_x) {
+                    engine_mode = !engine_mode;
+                }
             break;
         
             case SDL_QUIT:
@@ -140,8 +144,6 @@ void process_input() {
                         }
                     }
                 }
-
-
             break;
 
         }
