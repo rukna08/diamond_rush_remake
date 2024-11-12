@@ -24,10 +24,8 @@ SDL_Texture* text_texture;
 bool is_game_running = true;    
 
 
-// Bug 1: if ' engine_mode = false ', then nothing works.
-// Bug 2: Performance due to text rendering.
 // engine_mode = false is game_mode. ;)
-bool engine_mode = true;
+bool engine_mode = false;
 
 
 void draw();
@@ -60,12 +58,11 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < 8;  i++) place_wall(9, i);
     for (int i = 0; i < 15; i++) place_wall(i, 9);
 
-    if (engine_mode) {
-
+    
         // Grid Creation.
         create_level_grid_rects();
         
-    }
+    
     
     draw_text_init();
 
