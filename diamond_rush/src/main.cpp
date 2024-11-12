@@ -19,6 +19,7 @@ std::vector<SDL_Rect*> level_grid;
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
+int camera_offset = 10;
 
 
 bool is_game_running = true;    
@@ -135,6 +136,45 @@ void process_input() {
                 }
                 if (event.key.keysym.sym == SDLK_x) {
                     engine_mode = !engine_mode;
+                }
+
+                // Camera Controls.
+
+                if (event.key.keysym.sym == SDLK_w && engine_mode) {
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        level_grid[i]->y += camera_offset;
+                    }
+                    for (int i = 0; i < walls.size(); i++) {
+                        walls[i].rect.y += camera_offset;
+                    }
+                    player->rect.y += camera_offset;
+                }
+                if (event.key.keysym.sym == SDLK_a && engine_mode) {
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        level_grid[i]->x += camera_offset;
+                    }
+                    for (int i = 0; i < walls.size(); i++) {
+                        walls[i].rect.x += camera_offset;
+                    }
+                    player->rect.x += camera_offset;
+                }
+                if (event.key.keysym.sym == SDLK_s && engine_mode) {
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        level_grid[i]->y -= camera_offset;
+                    }
+                    for (int i = 0; i < walls.size(); i++) {
+                        walls[i].rect.y -= camera_offset;
+                    }
+                    player->rect.y -= camera_offset;
+                }
+                if (event.key.keysym.sym == SDLK_d && engine_mode) {
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        level_grid[i]->x -= camera_offset;
+                    }
+                    for (int i = 0; i < walls.size(); i++) {
+                        walls[i].rect.x -= camera_offset;
+                    }
+                    player->rect.x -= camera_offset;
                 }
             break;
         
