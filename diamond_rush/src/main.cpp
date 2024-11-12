@@ -5,9 +5,10 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <string>
 #include <vector>
-#include "player.h" 
+#include "player.h"
 #include "wall.h" 
 
 SDL_Window* window;
@@ -26,14 +27,18 @@ void draw();
 void draw_wall(std::vector<Wall>);
 void process_input();
 void place_wall(int, int);
-void place_wall_pixels(int x, int y);
+void place_wall_pixels(int, int);
 void create_level_grid_rects();
 void show_grid();
+void draw_text(std::string, int, int, SDL_Color*);
+
+SDL_Color color_white = { 255, 255, 255, 255 };
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP, &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
     player = new Player(renderer, 2, 2);
     
 
@@ -80,6 +85,10 @@ void draw() {
     SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
     show_grid();
     SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
+
+    if (engine_mode) draw_text("Engine Mode", 1100, 0, &color_white);
+    else draw_text("Game Mode", 1100, 0, &color_white);
+
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 }
@@ -168,5 +177,25 @@ void show_grid() {
     for (int i = 0; i < level_grid.size(); i++) {
         SDL_RenderDrawRect(renderer, level_grid[i]);
     }
+
+}
+
+void draw_text(std::string text, int x, int y, SDL_Color* color) {
+
+    TTF_Font* font = TTF_OpenFont("data/Roboto-Light.ttf", 250);
+
+    SDL_Surface* text_surface = TTF_RenderText_Solid(font, text.c_str(), *color);
+
+    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+
+    SDL_Rect text_rect = { x, y, 10 * text.length(), 23 };
+
+    SDL_RenderCopy(renderer, text_texture, 0, &text_rect);
+
+    TTF_CloseFont(font);
+
+    SDL_FreeSurface(text_surface);
+
+    SDL_DestroyTexture(text_texture);
 
 }
