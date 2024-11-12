@@ -37,7 +37,7 @@ void create_level_grid_rects();
 void show_grid();
 void draw_text(std::string, int, int, SDL_Color*);
 void draw_text_init();
-
+void camrea();
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -59,8 +59,8 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < 15; i++) place_wall(i, 9);
 
     
-        // Grid Creation.
-        create_level_grid_rects();
+    // Grid Creation.
+    create_level_grid_rects();
         
     
     
@@ -73,6 +73,7 @@ int main(int argc, char* argv[]) {
         draw_wall(walls);
         
         process_input();
+
         player->check_collision(walls);
         player->move_constant_right();
         player->move_constant_left();
@@ -120,16 +121,16 @@ void process_input() {
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     is_game_running = false;
                 }
-                if (event.key.keysym.sym == SDLK_w) {
+                if (event.key.keysym.sym == SDLK_w && !engine_mode) {
                     player->move("up");
                 }
-                if (event.key.keysym.sym == SDLK_a) {
+                if (event.key.keysym.sym == SDLK_a && !engine_mode) {
                     player->move("left");
                 }
-                if (event.key.keysym.sym == SDLK_s) {
+                if (event.key.keysym.sym == SDLK_s && !engine_mode) {
                     player->move("down");
                 }
-                if (event.key.keysym.sym == SDLK_d) {
+                if (event.key.keysym.sym == SDLK_d && !engine_mode) {
                     player->move("right");
                 }
                 if (event.key.keysym.sym == SDLK_x) {
