@@ -40,8 +40,8 @@ void show_grid();
 void draw_text(std::string, int, int, SDL_Color*);
 void draw_text_init();
 void init_animation();
-void play_animation();
-
+void play_animation(const std::string&);
+void update_animation();
 
 SDL_Color color_white = { 255, 255, 255, 255 };
 
@@ -106,13 +106,7 @@ int animation_index_player_idle = 0;
 int frames = 0;
 int animation_speed = 1200;
 void draw() {
-    if (!engine_mode) {
-        //play_animation();
-        player->texture = animation_player_idle_list[animation_index_player_idle];
-        SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
-    } else {
-        SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
-    }
+    play_animation("player_idle");
 
     if (engine_mode) show_grid();
     SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
@@ -130,6 +124,23 @@ void draw() {
 
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
+
+    update_animation();
+}
+
+void play_animation(const std::string& animation_name) {
+    if (animation_name == "player_idle") {
+        if (!engine_mode) {
+            player->texture = animation_player_idle_list[animation_index_player_idle];
+            SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+        }
+        else {
+            SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+        }
+    }
+}
+
+void update_animation() {
     if (frames % animation_speed == 0) {
         animation_index_player_idle++;
     }
@@ -303,13 +314,3 @@ void init_animation() {
 
 }
 
-void play_animation() {
-    
-    // Play Player Animation
-    for (int i = 0; i < 5; i++) {
-        player->texture = animation_player_idle_list[i];
-        SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
-        SDL_RenderPresent(renderer);
-    }
-
-}
