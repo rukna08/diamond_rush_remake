@@ -2,6 +2,7 @@
 #define WINDOW_RES_X 1280
 #define WINDOW_RES_Y 720
 #define ANGKOR_WAT "data/map_config_angkor_wat.txt"
+#define OUT "data/output.txt"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -338,6 +339,8 @@ void save_map() {
 
 void reload_map() {
 	std::ifstream angkor_level_file(ANGKOR_WAT);  
+	std::ofstream out(OUT);
+
 	if (!angkor_level_file.is_open()) {
 		std::cerr << "Could not open the file!" << std::endl;
 		return;
@@ -346,6 +349,7 @@ void reload_map() {
 	std::string line;
 	while (std::getline(angkor_level_file, line)) {
 		std::istringstream stream(line);
+
 		int x, y;
 
 		// Read x and y from the stream
@@ -356,6 +360,9 @@ void reload_map() {
 			std::cerr << "Invalid line format: " << line << std::endl;
 		}
 	}
+	out.close();
+	angkor_level_file.close();
+	
 }
 
 
