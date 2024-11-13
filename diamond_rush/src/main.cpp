@@ -8,6 +8,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <string>
+#include <utility>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -40,6 +41,7 @@ void draw_wall(std::vector<Wall>);
 void process_input();
 void place_wall(int, int);
 void place_wall_pixels(int, int);
+void remove_wall_pixels(int, int);
 void create_level_grid_rects();
 void show_grid();
 void draw_text(std::string, int, int, SDL_Color*);
@@ -62,7 +64,7 @@ int main(int argc, char* argv[]) {
 
 
 
-	// Wall Placement.
+	// Hard-coded Wall Placement.
 	for (int i = 0; i < 10; i++) place_wall(i, 0);
 	for (int i = 0; i < 10; i++) place_wall(0, i);
 	for (int i = 6; i < 15; i++) place_wall(i, 7);
@@ -178,12 +180,13 @@ void process_input() {
 			if (event.key.keysym.sym == SDLK_x) {
 				engine_mode = !engine_mode;
 			}
-			if (event.key.keysym.sym == SDLK_y) {
+			if (event.key.keysym.sym == SDLK_y && !engine_mode) {
 				reload_map();
 			}
-			if (event.key.keysym.sym == SDLK_l) {
+			if (event.key.keysym.sym == SDLK_l && !engine_mode) {
 				destroy_map();
 			}
+
 			// Camera Controls.
 
 			if (event.key.keysym.sym == SDLK_w && engine_mode) {
@@ -232,21 +235,44 @@ void process_input() {
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
+			
 			int x = event.motion.x;
 			int y = event.motion.y;
 
 			SDL_Point mouse_position = { x, y };
 
 			if (engine_mode) {
-				for (int i = 0; i < level_grid.size(); i++) {
-					if (SDL_PointInRect(&mouse_position, level_grid[i])) {
-						place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+				if (event.button.button == SDL_BUTTON_RIGHT) { // Right mouse button
+					for (int i = 0; i < level_grid.size(); i++) {
+						if (SDL_PointInRect(&mouse_position, level_grid[i])) {
+							place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+						}
+					}
+				}
+				else if (event.button.button == SDL_BUTTON_LEFT) { // Left mouse button
+					for (int i = 0; i < level_grid.size(); i++) {
+						if (SDL_PointInRect(&mouse_position, level_grid[i])) {
+							//delete that specific wall of location x,y
+							remove_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+						}
 					}
 				}
 			}
+
 			break;
 
 		}
+	}
+}
+//Wall Removal function
+void remove_wall_pixels(int x, int y) {
+	auto it = std::remove_if(walls.begin(), walls.end(), [x, y](const Wall& wall) {
+		return wall.rect.x == x && wall.rect.y == y;
+		});
+
+	
+	if (it != walls.end()) {
+		walls.erase(it, walls.end());
 	}
 }
 
@@ -338,6 +364,7 @@ void save_map() {
 
 
 void reload_map() {
+	std::vector<std::pair<int, int>> temp;
 	std::ifstream angkor_level_file(ANGKOR_WAT);  
 	std::ofstream out(OUT);
 
@@ -354,7 +381,7 @@ void reload_map() {
 
 		// Read x and y from the stream
 		if (stream >> x >> y) {
-			place_wall(x, y);
+			temp.push_back(std::make_pair(x,y));
 		}
 		else {
 			std::cerr << "Invalid line format: " << line << std::endl;
@@ -362,7 +389,7 @@ void reload_map() {
 	}
 	out.close();
 	angkor_level_file.close();
-	
+	for (auto& i : temp) std::cout << i.first << " " << i.second << "\n";
 }
 
 
