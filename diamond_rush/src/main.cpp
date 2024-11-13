@@ -20,6 +20,7 @@ TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
 int camera_offset = 20;
+std::vector<SDL_Texture*> animation_player_idle_list;
 
 
 bool is_game_running = true;    
@@ -38,6 +39,8 @@ void create_level_grid_rects();
 void show_grid();
 void draw_text(std::string, int, int, SDL_Color*);
 void draw_text_init();
+void init_animation();
+void play_animation();
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -65,6 +68,10 @@ int main(int argc, char* argv[]) {
     
     
     draw_text_init();
+
+
+    // Initialize Animation System.
+    init_animation();
 
     // Game Loop.
     while (is_game_running) {
@@ -96,9 +103,14 @@ int main(int argc, char* argv[]) {
 }
 
 void draw() {
-    SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+    if (!engine_mode) {
+        play_animation();
+    } else {
+        SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+    }
+
     if (engine_mode) show_grid();
-    SDL_SetRenderDrawColor(renderer, 0, 22, 51, 255);
+    SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
     if (engine_mode) draw_text("Engine Mode", 1100, 0, &color_white);
     else draw_text("Game Mode", 1100, 0, &color_white);
 
@@ -263,4 +275,24 @@ void draw_text(std::string text, int x, int y, SDL_Color* color) {
     SDL_RenderCopy(renderer, last_text_texture, nullptr, &text_rect);
 }
 
+void init_animation() {
+    
+    // Player Idle Animation
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_1.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_2.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_3.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_4.png"));
 
+}
+
+void play_animation() {
+    
+    // Play Player Animation
+    for (int i = 0; i < 5; i++) {
+        player->texture = animation_player_idle_list[i];
+        SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+        SDL_RenderPresent(renderer);
+    }
+
+}
