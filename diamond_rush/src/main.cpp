@@ -102,9 +102,12 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
+int animation_index_player_idle = 0;
 void draw() {
     if (!engine_mode) {
-        play_animation();
+        //play_animation();
+        player->texture = animation_player_idle_list[animation_index_player_idle];
+        SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
     } else {
         SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
     }
@@ -121,8 +124,12 @@ void draw() {
         draw_text(position, player->rect.x, player->rect.y, &color_white);
     }
 
+    
+
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
+    animation_index_player_idle++;
+    if (animation_index_player_idle == animation_player_idle_list.size() - 1) animation_index_player_idle = 0;
 }
 
 void draw_wall(std::vector<Wall> walls) {
