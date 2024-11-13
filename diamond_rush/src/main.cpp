@@ -19,7 +19,7 @@ std::vector<SDL_Rect*> level_grid;
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
-int camera_offset = 20;
+int camera_offset = 40;
 std::vector<SDL_Texture*> animation_player_idle_list;
 
 
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 
 int animation_index_player_idle = 0;
 int frames = 0;
-int animation_speed = 360;
+int animation_speed = 1200;
 void draw() {
     if (!engine_mode) {
         //play_animation();
@@ -291,11 +291,15 @@ void draw_text(std::string text, int x, int y, SDL_Color* color) {
 void init_animation() {
     
     // Player Idle Animation
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_1.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_2.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_3.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/sprite_player_4.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/0.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/1.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/2.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/3.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/4.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/5.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/6.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/7.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/8.png"));
 
 }
 

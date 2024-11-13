@@ -7,7 +7,7 @@ Player::Player(SDL_Renderer* renderer, int unit_x, int unit_y) {
     can_move_left = false;
     can_move_up = false;
     can_move_down = false;
-    texture = IMG_LoadTexture(renderer, "data/sprite_player.png");
+    texture = IMG_LoadTexture(renderer, "data/animation/player_idle/0.png");
 }
 
 void Player::move(const std::string& direction) {
