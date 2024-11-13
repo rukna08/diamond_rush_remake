@@ -102,11 +102,13 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
+
+std::string current_idle_animation = "player_idle_right";
 int animation_index_player_idle = 0;
 int frames = 0;
 int animation_speed = 1200;
 void draw() {
-    play_animation("player_idle");
+    play_animation(current_idle_animation);
 
     if (engine_mode) show_grid();
     SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
@@ -129,13 +131,23 @@ void draw() {
 }
 
 void play_animation(const std::string& animation_name) {
-    if (animation_name == "player_idle") {
+    if (animation_name == "player_idle_right") {
         if (!engine_mode) {
             player->texture = animation_player_idle_list[animation_index_player_idle];
             SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
         }
         else {
             SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
+        }
+    }
+
+    if (animation_name == "player_idle_left") {
+        if (!engine_mode) {
+            player->texture = animation_player_idle_list[animation_index_player_idle];
+            SDL_RenderCopyEx(renderer, player->texture, 0, &player->rect, 0, 0, SDL_FLIP_HORIZONTAL);
+        }
+        else {
+            SDL_RenderCopyEx(renderer, player->texture, 0, &player->rect, 0, 0, SDL_FLIP_HORIZONTAL);
         }
     }
 }
@@ -160,7 +172,6 @@ void process_input() {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             
-        
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     is_game_running = false;
@@ -170,12 +181,14 @@ void process_input() {
                 }
                 if (event.key.keysym.sym == SDLK_a && !engine_mode) {
                     player->move("left");
+                    current_idle_animation = "player_idle_left";
                 }
                 if (event.key.keysym.sym == SDLK_s && !engine_mode) {
                     player->move("down");
                 }
                 if (event.key.keysym.sym == SDLK_d && !engine_mode) {
                     player->move("right");
+                    current_idle_animation = "player_idle_right";
                 }
                 if (event.key.keysym.sym == SDLK_x) {
                     engine_mode = !engine_mode;
