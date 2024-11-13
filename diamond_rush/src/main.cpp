@@ -246,8 +246,8 @@ void place_wall_pixels(int x, int y) {
 
 void create_level_grid_rects() {
 
-    for (int y = 0; y < WINDOW_RES_Y; y += SPRITE_SIZE) {
-        for (int x = 0; x < WINDOW_RES_X; x += SPRITE_SIZE) {
+    for (int y = 0; y < WINDOW_RES_Y*3; y += SPRITE_SIZE) {
+        for (int x = 0; x < WINDOW_RES_X*3; x += SPRITE_SIZE) {
             
             level_grid.push_back(new SDL_Rect{ x, y, SPRITE_SIZE, SPRITE_SIZE } );
 
