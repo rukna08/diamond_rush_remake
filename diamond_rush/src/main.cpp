@@ -103,6 +103,8 @@ int main(int argc, char* argv[]) {
 }
 
 int animation_index_player_idle = 0;
+int frames = 0;
+int animation_speed = 360;
 void draw() {
     if (!engine_mode) {
         //play_animation();
@@ -128,8 +130,12 @@ void draw() {
 
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
-    animation_index_player_idle++;
+    if (frames % animation_speed == 0) {
+        animation_index_player_idle++;
+    }
     if (animation_index_player_idle == animation_player_idle_list.size() - 1) animation_index_player_idle = 0;
+    if (frames == animation_speed) frames = 0;
+    frames++;
 }
 
 void draw_wall(std::vector<Wall> walls) {
