@@ -1,14 +1,13 @@
 #define SPRITE_SIZE 64
 #define WINDOW_RES_X 1280
 #define WINDOW_RES_Y 720
-#define ANGKOR_WAT "data/map_config_angkor_wat.txt"
-#define OUT "data/output.txt"
+#define ANGKOR_WAT "data/map_config_angkor_wat.level"
+
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <string>
-#include <utility>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -62,19 +61,10 @@ int main(int argc, char* argv[]) {
 	TTF_Init();
 	player = new Player(renderer, 2, 2);
 
-
-
-	// Hard-coded Wall Placement.
-	for (int i = 0; i < 10; i++) place_wall(i, 0);
-	for (int i = 0; i < 10; i++) place_wall(0, i);
-	for (int i = 6; i < 15; i++) place_wall(i, 7);
-	for (int i = 0; i < 8; i++) place_wall(9, i);
-	for (int i = 0; i < 15; i++) place_wall(i, 9);
-
-
+	//Reload the map from .level files
+	reload_map();
 	// Grid Creation.
 	create_level_grid_rects();
-
 
 
 	draw_text_init();
@@ -103,7 +93,7 @@ int main(int argc, char* argv[]) {
 
 
 	// Unload
-
+	destroy_map();
 	IMG_Quit();
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
@@ -364,32 +354,16 @@ void save_map() {
 
 
 void reload_map() {
-	std::vector<std::pair<int, int>> temp;
 	std::ifstream angkor_level_file(ANGKOR_WAT);  
-	std::ofstream out(OUT);
-
-	if (!angkor_level_file.is_open()) {
-		std::cerr << "Could not open the file!" << std::endl;
-		return;
-	}
-
 	std::string line;
 	while (std::getline(angkor_level_file, line)) {
 		std::istringstream stream(line);
-
 		int x, y;
-
-		// Read x and y from the stream
 		if (stream >> x >> y) {
-			temp.push_back(std::make_pair(x,y));
-		}
-		else {
-			std::cerr << "Invalid line format: " << line << std::endl;
+			place_wall_pixels(x, y);
 		}
 	}
-	out.close();
 	angkor_level_file.close();
-	for (auto& i : temp) std::cout << i.first << " " << i.second << "\n";
 }
 
 
