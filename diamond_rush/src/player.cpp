@@ -8,6 +8,7 @@ Player::Player(SDL_Renderer* renderer, int unit_x, int unit_y) {
     can_move_up = false;
     can_move_down = false;
     texture = IMG_LoadTexture(renderer, "data/animation/player_idle/0.png");
+    speed = 1;
 }
 
 void Player::move(const std::string& direction) {
@@ -36,7 +37,7 @@ void Player::move_constant_right() {
         can_move_right = false;
     }
     if (can_move_right && rect.x < destination) {
-        rect.x++;
+        rect.x += speed;
     }
 }
 
@@ -45,7 +46,7 @@ void Player::move_constant_left() {
         can_move_left = false;
     }
     if (can_move_left && rect.x > destination) {
-        rect.x--;
+        rect.x -= speed;
     }
 }
 
@@ -54,7 +55,7 @@ void Player::move_constant_down() {
         can_move_down = false;
     }
     if (can_move_down && rect.y < destination) {
-        rect.y++;
+        rect.y += speed;
     }
 }
 
@@ -63,7 +64,7 @@ void Player::move_constant_up() {
         can_move_up = false;
     }
     if (can_move_up && rect.y > destination) {
-        rect.y--;
+        rect.y -= speed;
     }
 }
 

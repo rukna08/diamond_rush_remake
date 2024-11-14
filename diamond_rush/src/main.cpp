@@ -76,6 +76,8 @@ int main(int argc, char* argv[]) {
     // Initialize Animation System.
     init_animation();
 
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
     // Game Loop.
     while (is_game_running) {
         
@@ -89,7 +91,6 @@ int main(int argc, char* argv[]) {
         player->move_constant_left();
         player->move_constant_up();
         player->move_constant_down();
-        
     }
 
 
@@ -303,7 +304,7 @@ void create_level_grid_rects() {
 
 void show_grid() {
     
-    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 30);
     
     for (int i = 0; i < level_grid.size(); i++) {
         SDL_RenderDrawRect(renderer, level_grid[i]);

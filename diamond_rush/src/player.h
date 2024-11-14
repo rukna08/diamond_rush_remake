@@ -18,6 +18,7 @@ public:
     bool can_move_left;
     bool can_move_up;
     bool can_move_down;
+    int speed;
 
     Player(SDL_Renderer* renderer, int unit_x, int unit_y);
     void move(const std::string& direction);
