@@ -47,6 +47,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
-    <None Include="C:\Users\mazum\Downloads\SDL2_ttf.dll" />
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ Player::Player(SDL_Renderer* renderer, int unit_x, int unit_y) {
     speed = 1;
 }
 
-void Player::move( std::string& direction) {
+void Player::move(const std::string& direction) {
     if (!can_move_up && !can_move_down && !can_move_left && !can_move_right) {
         if (direction == "right") {
             destination = rect.x + SPRITE_SIZE;

@@ -20,7 +20,7 @@ public:
     int speed;
 
     Player(SDL_Renderer* renderer, int unit_x, int unit_y);
-    void move( std::string& direction);
+    void move(const std::string& direction);
     void move_constant_right();
     void move_constant_left();
     void move_constant_down();
