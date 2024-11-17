@@ -14,12 +14,16 @@
 #include <sstream>
 #include "player.h"
 #include "wall.h" 
+#include "map_manager.h"
+#include "grid_manager.h"
 
-SDL_Window* window;
-SDL_Renderer* renderer;
-Player* player;
-std::vector<Wall> walls;
-std::vector<SDL_Rect*> level_grid;
+
+extern SDL_Window* window;
+extern SDL_Renderer* renderer;
+extern Player* player;
+extern std::vector<Wall> walls;
+extern std::vector<SDL_Rect*> level_grid;
+
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
@@ -27,7 +31,7 @@ int camera_offset = 40;
 std::vector<SDL_Texture*> animation_player_idle_list;
 
 
-bool is_game_running = true;    
+bool is_game_running = true;
 
 
 // engine_mode = false is game_mode. ;)
@@ -37,18 +41,12 @@ bool engine_mode = false;
 void draw();
 void draw_wall(std::vector<Wall>);
 void process_input();
-void place_wall(int, int);
-void place_wall_pixels(int, int);
-void create_level_grid_rects();
-void show_grid();
+
 void draw_text(std::string, int, int, SDL_Color*);
 void draw_text_init();
 void init_animation();
 void play_animation(const std::string&);
 void update_animation();
-void save_map();
-void reload_map();
-void destroy_map();
 void remove_wall_pixels(int, int);
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -59,17 +57,17 @@ int main(int argc, char* argv[]) {
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     player = new Player(renderer, 2, 2);
-    
+
 
     // Load the game map.
     reload_map();
 
-    
+
     // Grid Creation.
     create_level_grid_rects();
-        
-    
-    
+
+
+
     draw_text_init();
 
 
@@ -80,10 +78,10 @@ int main(int argc, char* argv[]) {
 
     // Game Loop.
     while (is_game_running) {
-        
+
         draw();
         draw_wall(walls);
-        
+
         process_input();
 
         player->check_collision(walls);
@@ -97,12 +95,12 @@ int main(int argc, char* argv[]) {
 
 
     // Unload
-    
+
     IMG_Quit();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
-    
+
     return 0;
 }
 
@@ -126,7 +124,7 @@ void draw() {
         draw_text(position, player->rect.x, player->rect.y, &color_white);
     }
 
-    
+
 
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
@@ -175,105 +173,105 @@ void process_input() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-            
-            case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_ESCAPE) {
-                    is_game_running = false;
-                }
-                if (event.key.keysym.sym == SDLK_w && !engine_mode) {
-                    player->move("up");
-                }
-                if (event.key.keysym.sym == SDLK_a && !engine_mode) {
-                    player->move("left");
-                    current_idle_animation = "player_idle_left";
-                }
-                if (event.key.keysym.sym == SDLK_s && !engine_mode) {
-                    player->move("down");
-                }
-                if (event.key.keysym.sym == SDLK_d && !engine_mode) {
-                    player->move("right");
-                    current_idle_animation = "player_idle_right";
-                }
-                if (event.key.keysym.sym == SDLK_x) {
-                    engine_mode = !engine_mode;
-                }
-                if (event.key.keysym.sym == SDLK_y && !engine_mode) {
-                    reload_map();
-                }
-                if (event.key.keysym.sym == SDLK_l && !engine_mode) {
-                    destroy_map();
-                }
 
-                // Camera Controls.
-
-                if (event.key.keysym.sym == SDLK_w && engine_mode) {
-                    for (int i = 0; i < level_grid.size(); i++) {
-                        level_grid[i]->y += camera_offset;
-                    }
-                    for (int i = 0; i < walls.size(); i++) {
-                        walls[i].rect.y += camera_offset;
-                    }
-                    player->rect.y += camera_offset;
-                }
-                if (event.key.keysym.sym == SDLK_a && engine_mode) {
-                    for (int i = 0; i < level_grid.size(); i++) {
-                        level_grid[i]->x += camera_offset;
-                    }
-                    for (int i = 0; i < walls.size(); i++) {
-                        walls[i].rect.x += camera_offset;
-                    }
-                    player->rect.x += camera_offset;
-                }
-                if (event.key.keysym.sym == SDLK_s && engine_mode) {
-                    for (int i = 0; i < level_grid.size(); i++) {
-                        level_grid[i]->y -= camera_offset;
-                    }
-                    for (int i = 0; i < walls.size(); i++) {
-                        walls[i].rect.y -= camera_offset;
-                    }
-                    player->rect.y -= camera_offset;
-                }
-                if (event.key.keysym.sym == SDLK_d && engine_mode) {
-                    for (int i = 0; i < level_grid.size(); i++) {
-                        level_grid[i]->x -= camera_offset;
-                    }
-                    for (int i = 0; i < walls.size(); i++) {
-                        walls[i].rect.x -= camera_offset;
-                    }
-                    player->rect.x -= camera_offset;
-                }
-                if (event.key.keysym.sym == SDLK_r && engine_mode) {
-                    save_map();
-                }
-            break;
-        
-            case SDL_QUIT:
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
                 is_game_running = false;
+            }
+            if (event.key.keysym.sym == SDLK_w && !engine_mode) {
+                player->move("up");
+            }
+            if (event.key.keysym.sym == SDLK_a && !engine_mode) {
+                player->move("left");
+                current_idle_animation = "player_idle_left";
+            }
+            if (event.key.keysym.sym == SDLK_s && !engine_mode) {
+                player->move("down");
+            }
+            if (event.key.keysym.sym == SDLK_d && !engine_mode) {
+                player->move("right");
+                current_idle_animation = "player_idle_right";
+            }
+            if (event.key.keysym.sym == SDLK_x) {
+                engine_mode = !engine_mode;
+            }
+            if (event.key.keysym.sym == SDLK_y && !engine_mode) {
+                reload_map();
+            }
+            if (event.key.keysym.sym == SDLK_l && !engine_mode) {
+                destroy_map();
+            }
+
+            // Camera Controls.
+
+            if (event.key.keysym.sym == SDLK_w && engine_mode) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->y += camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.y += camera_offset;
+                }
+                player->rect.y += camera_offset;
+            }
+            if (event.key.keysym.sym == SDLK_a && engine_mode) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->x += camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.x += camera_offset;
+                }
+                player->rect.x += camera_offset;
+            }
+            if (event.key.keysym.sym == SDLK_s && engine_mode) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->y -= camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.y -= camera_offset;
+                }
+                player->rect.y -= camera_offset;
+            }
+            if (event.key.keysym.sym == SDLK_d && engine_mode) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->x -= camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.x -= camera_offset;
+                }
+                player->rect.x -= camera_offset;
+            }
+            if (event.key.keysym.sym == SDLK_r && engine_mode) {
+                save_map();
+            }
             break;
 
-            case SDL_MOUSEBUTTONDOWN:
-                int x = event.motion.x;
-                int y = event.motion.y;
+        case SDL_QUIT:
+            is_game_running = false;
+            break;
 
-                SDL_Point mouse_position = { x, y };
+        case SDL_MOUSEBUTTONDOWN:
+            int x = event.motion.x;
+            int y = event.motion.y;
 
-                if (engine_mode) {
-                    if (event.button.button == SDL_BUTTON_LEFT) { // Right mouse button
-                        for (int i = 0; i < level_grid.size(); i++) {
-                            if (SDL_PointInRect(&mouse_position, level_grid[i])) {
-                                place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
-                            }
-                        }
-                    }
-                    else if (event.button.button == SDL_BUTTON_RIGHT) { // Left mouse button
-                        for (int i = 0; i < level_grid.size(); i++) {
-                            if (SDL_PointInRect(&mouse_position, level_grid[i])) {
-                                //delete that specific wall of location x,y
-                                remove_wall_pixels(level_grid[i]->x, level_grid[i]->y);
-                            }
+            SDL_Point mouse_position = { x, y };
+
+            if (engine_mode) {
+                if (event.button.button == SDL_BUTTON_LEFT) { // Right mouse button
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        if (SDL_PointInRect(&mouse_position, level_grid[i])) {
+                            place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
                         }
                     }
                 }
+                else if (event.button.button == SDL_BUTTON_RIGHT) { // Left mouse button
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        if (SDL_PointInRect(&mouse_position, level_grid[i])) {
+                            //delete that specific wall of location x,y
+                            remove_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+                        }
+                    }
+                }
+            }
 
             break;
 
@@ -281,36 +279,6 @@ void process_input() {
     }
 }
 
-// This is in unit level.
-void place_wall(int unit_x, int unit_y) {
-    walls.emplace_back(SPRITE_SIZE * unit_x, SPRITE_SIZE * unit_y, renderer);
-}
-
-// This is in pixel level.
-void place_wall_pixels(int x, int y) {
-    walls.emplace_back(x, y, renderer);
-}
-
-void create_level_grid_rects() {
-
-    for (int y = 0; y < WINDOW_RES_Y*3; y += SPRITE_SIZE) {
-        for (int x = 0; x < WINDOW_RES_X*3; x += SPRITE_SIZE) {
-            
-            level_grid.push_back(new SDL_Rect{ x, y, SPRITE_SIZE, SPRITE_SIZE } );
-
-        }
-    }
-}
-
-void show_grid() {
-    
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 30);
-    
-    for (int i = 0; i < level_grid.size(); i++) {
-        SDL_RenderDrawRect(renderer, level_grid[i]);
-    }
-
-}
 
 void draw_text_init() {
     font = TTF_OpenFont("data/Roboto-Light.ttf", 250);
@@ -323,12 +291,12 @@ void draw_text(std::string text, int x, int y, SDL_Color* color) {
 
     if (text != last_text) {
         if (last_text_texture) {
-            SDL_DestroyTexture(last_text_texture); 
+            SDL_DestroyTexture(last_text_texture);
         }
         text_surface = TTF_RenderText_Solid(font, text.c_str(), *color);
         last_text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
-        SDL_FreeSurface(text_surface);  
-        last_text = text;  
+        SDL_FreeSurface(text_surface);
+        last_text = text;
     }
 
     SDL_Rect text_rect = { x, y, 10 * text.length(), 23 };
@@ -336,7 +304,7 @@ void draw_text(std::string text, int x, int y, SDL_Color* color) {
 }
 
 void init_animation() {
-    
+
     // Player Idle Animation
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/0.png"));
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/1.png"));
@@ -362,29 +330,3 @@ void remove_wall_pixels(int x, int y) {
     }
 }
 
-void save_map() {
-    std::ofstream angkor_level_file(ANGKOR_WAT);
-    if (walls.size() == 0) return;
-    for (int i = 0; i < walls.size(); i++) {
-        angkor_level_file << walls[i].rect.x << " " << walls[i].rect.y << "\n";
-    }
-    angkor_level_file.close();
-}
-
-void reload_map() {
-    std::ifstream angkor_level_file(ANGKOR_WAT);
-    std::string line;
-    while (std::getline(angkor_level_file, line)) {
-        std::istringstream stream(line);
-        int x, y;
-        if (stream >> x >> y) {
-            place_wall_pixels(x, y);
-        }
-    }
-    angkor_level_file.close();
-}
-
-void destroy_map() {
-    if (walls.size() == 0) return;
-    else walls.clear();
-}

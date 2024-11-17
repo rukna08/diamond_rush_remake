@@ -131,15 +131,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\map_manager.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\player.h" />
     <ClCompile Include="src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\map_manager.h" />
     <ClInclude Include="src\wall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="C:\Users\mazum\Downloads\SDL2_ttf.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
