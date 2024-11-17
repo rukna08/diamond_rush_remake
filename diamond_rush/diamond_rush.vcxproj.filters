@@ -30,12 +30,18 @@
     <ClCompile Include="src\map_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\grid_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\map_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\grid_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

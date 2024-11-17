@@ -18,11 +18,11 @@
 #include "grid_manager.h"
 
 
-extern SDL_Window* window;
-extern SDL_Renderer* renderer;
-extern Player* player;
-extern std::vector<Wall> walls;
-extern std::vector<SDL_Rect*> level_grid;
+SDL_Window* window;
+SDL_Renderer* renderer;
+Player* player;
+std::vector<Wall> walls;
+std::vector<SDL_Rect*> level_grid;
 
 TTF_Font* font;
 SDL_Surface* text_surface;
@@ -60,11 +60,11 @@ int main(int argc, char* argv[]) {
 
 
     // Load the game map.
-    reload_map();
+    reload_map(walls,renderer);
 
 
     // Grid Creation.
-    create_level_grid_rects();
+    create_level_grid_rects(level_grid);
 
 
 
@@ -112,7 +112,7 @@ int animation_speed = 1200;
 void draw() {
     play_animation(current_idle_animation);
 
-    if (engine_mode) show_grid();
+    if (engine_mode) show_grid(level_grid,renderer);
     SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
     if (engine_mode) draw_text("Engine Mode", 1100, 0, &color_white);
     else draw_text("Game Mode", 1100, 0, &color_white);
@@ -196,10 +196,10 @@ void process_input() {
                 engine_mode = !engine_mode;
             }
             if (event.key.keysym.sym == SDLK_y && !engine_mode) {
-                reload_map();
+                reload_map(walls,renderer);
             }
             if (event.key.keysym.sym == SDLK_l && !engine_mode) {
-                destroy_map();
+                destroy_map(walls);
             }
 
             // Camera Controls.
@@ -241,7 +241,7 @@ void process_input() {
                 player->rect.x -= camera_offset;
             }
             if (event.key.keysym.sym == SDLK_r && engine_mode) {
-                save_map();
+                save_map(walls,0);
             }
             break;
 
@@ -259,7 +259,7 @@ void process_input() {
                 if (event.button.button == SDL_BUTTON_LEFT) { // Right mouse button
                     for (int i = 0; i < level_grid.size(); i++) {
                         if (SDL_PointInRect(&mouse_position, level_grid[i])) {
-                            place_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+                            place_wall_pixels(walls,level_grid[i]->x, level_grid[i]->y,renderer);
                         }
                     }
                 }
@@ -267,7 +267,7 @@ void process_input() {
                     for (int i = 0; i < level_grid.size(); i++) {
                         if (SDL_PointInRect(&mouse_position, level_grid[i])) {
                             //delete that specific wall of location x,y
-                            remove_wall_pixels(level_grid[i]->x, level_grid[i]->y);
+                            remove_wall_pixels(walls,level_grid[i]->x, level_grid[i]->y);
                         }
                     }
                 }

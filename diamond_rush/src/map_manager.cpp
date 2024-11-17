@@ -1,5 +1,4 @@
 #include "map_manager.h"
-#include "main.cpp"
 
 // [ENGINE MODE] Save the walls upon a KEYPRESS 'r' event.
 void save_map(std::vector<Wall>& stage_wall, int command) {
@@ -12,14 +11,14 @@ void save_map(std::vector<Wall>& stage_wall, int command) {
 }
 
 // [GAME MODE] Reload the walls upon a KEYPRESS 'y' event.
-void reload_map() {
+void reload_map(std::vector<Wall>& stage_wall, SDL_Renderer* rndr) {
     std::ifstream angkor_level_file(ANGKOR_WAT);
     std::string line;
     while (std::getline(angkor_level_file, line)) {
         std::istringstream stream(line);
         int x, y;
         if (stream >> x >> y) {
-            place_wall_pixels(x, y);
+            place_wall_pixels(stage_wall,x, y,rndr);
         }
     }
     angkor_level_file.close();

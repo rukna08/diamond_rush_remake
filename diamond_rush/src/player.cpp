@@ -11,7 +11,7 @@ Player::Player(SDL_Renderer* renderer, int unit_x, int unit_y) {
     speed = 1;
 }
 
-void Player::move(const std::string& direction) {
+void Player::move( std::string& direction) {
     if (!can_move_up && !can_move_down && !can_move_left && !can_move_right) {
         if (direction == "right") {
             destination = rect.x + SPRITE_SIZE;
@@ -68,7 +68,7 @@ void Player::move_constant_up() {
     }
 }
 
-void Player::check_collision(const std::vector<Wall>& walls) {
+void Player::check_collision( std::vector<Wall>& walls) {
     
     SDL_Point right_tile_point = { rect.x + (SPRITE_SIZE), rect.y };
     SDL_Point left_tile_point  = { rect.x - 1, rect.y };

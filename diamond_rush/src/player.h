@@ -1,5 +1,4 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -21,12 +20,10 @@ public:
     int speed;
 
     Player(SDL_Renderer* renderer, int unit_x, int unit_y);
-    void move(const std::string& direction);
+    void move( std::string& direction);
     void move_constant_right();
     void move_constant_left();
     void move_constant_down();
     void move_constant_up();
-    void check_collision(const std::vector<Wall>& walls);
+    void check_collision( std::vector<Wall>& walls);
 };
-
-#endif
