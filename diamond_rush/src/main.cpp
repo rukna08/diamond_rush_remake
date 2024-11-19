@@ -16,6 +16,8 @@
 #include "wall.h" 
 #include "map_manager.h"
 #include "grid_manager.h"
+#include <stack>
+#include <iostream>
 
 
 SDL_Window* window;
@@ -23,6 +25,7 @@ SDL_Renderer* renderer;
 Player* player;
 std::vector<Wall> walls;
 std::vector<SDL_Rect*> level_grid;
+std::stack<char> direction_stream;
 
 TTF_Font* font;
 SDL_Surface* text_surface;
@@ -48,6 +51,8 @@ void init_animation();
 void play_animation(const std::string&);
 void update_animation();
 void remove_wall_pixels(int, int);
+void map_reset();
+
 
 SDL_Color color_white = { 255, 255, 255, 255 };
 
@@ -194,9 +199,12 @@ void process_input() {
             }
             if (event.key.keysym.sym == SDLK_x) {
                 engine_mode = !engine_mode;
+                map_reset();
             }
             if (event.key.keysym.sym == SDLK_y && !engine_mode) {
                 reload_map(walls,renderer);
+                //do the map reset here.
+                
             }
             if (event.key.keysym.sym == SDLK_l && !engine_mode) {
                 destroy_map(walls);
@@ -212,6 +220,7 @@ void process_input() {
                     walls[i].rect.y += camera_offset;
                 }
                 player->rect.y += camera_offset;
+                direction_stream.push('W');
             }
             if (event.key.keysym.sym == SDLK_a && engine_mode) {
                 for (int i = 0; i < level_grid.size(); i++) {
@@ -221,6 +230,7 @@ void process_input() {
                     walls[i].rect.x += camera_offset;
                 }
                 player->rect.x += camera_offset;
+                direction_stream.push('A');
             }
             if (event.key.keysym.sym == SDLK_s && engine_mode) {
                 for (int i = 0; i < level_grid.size(); i++) {
@@ -230,6 +240,7 @@ void process_input() {
                     walls[i].rect.y -= camera_offset;
                 }
                 player->rect.y -= camera_offset;
+                direction_stream.push('S');
             }
             if (event.key.keysym.sym == SDLK_d && engine_mode) {
                 for (int i = 0; i < level_grid.size(); i++) {
@@ -239,6 +250,7 @@ void process_input() {
                     walls[i].rect.x -= camera_offset;
                 }
                 player->rect.x -= camera_offset;
+                direction_stream.push('D');
             }
             if (event.key.keysym.sym == SDLK_r && engine_mode) {
                 save_map(walls,0);
@@ -280,7 +292,7 @@ void process_input() {
 }
 
 
-void draw_text_init() {
+void draw_text_init(){
     font = TTF_OpenFont("data/Roboto-Light.ttf", 250);
 }
 
@@ -330,3 +342,51 @@ void remove_wall_pixels(int x, int y) {
     }
 }
 
+
+
+void map_reset() {
+    if (direction_stream.empty() == true) { std::cout << "STACK EMPTY!\n"; return; }
+    // do the reset logic here !!!!
+    while (direction_stream.empty() == false) {
+        char tmp = direction_stream.top();
+        // camera movement logic
+        if (tmp == 'W') {
+            for (int i = 0; i < level_grid.size(); i++) {
+                level_grid[i]->y -= camera_offset;
+
+            }
+            for (int i = 0; i < walls.size(); i++) {
+                walls[i].rect.y -= camera_offset;
+            }
+            player->rect.y -= camera_offset;
+        }
+        else if (tmp == 'A') {
+            for (int i = 0; i < level_grid.size(); i++) {
+                level_grid[i]->x -= camera_offset;
+            }
+            for (int i = 0; i < walls.size(); i++) {
+                walls[i].rect.x -= camera_offset;
+            }
+            player->rect.x -= camera_offset;
+        }
+        else if (tmp == 'S') {
+            for (int i = 0; i < level_grid.size(); i++) {
+                level_grid[i]->y += camera_offset;
+            }
+            for (int i = 0; i < walls.size(); i++) {
+                walls[i].rect.y += camera_offset;
+            }
+            player->rect.y += camera_offset;
+        }
+        else if (tmp == 'D') {
+            for (int i = 0; i < level_grid.size(); i++) {
+                level_grid[i]->x += camera_offset;
+            }
+            for (int i = 0; i < walls.size(); i++) {
+                walls[i].rect.x += camera_offset;
+            }
+            player->rect.x += camera_offset;
+        }
+        direction_stream.pop();
+    }
+}
