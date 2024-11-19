@@ -146,7 +146,6 @@ void play_animation(const std::string& animation_name) {
     if (animation_name == "player_idle_right") {
         if (!engine_mode) {
             player->texture = animation_player_idle_list[animation_index_player_idle];
-            std::cout << "animation_index_player_idle: " << animation_index_player_idle << std::endl;
             SDL_RenderCopy(renderer, player->texture, 0, &player->rect);
         }
         else {
