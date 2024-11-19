@@ -1,9 +1,5 @@
 ﻿  main.cpp
-C:\work\diamond_rush_remake\diamond_rush\src\main.cpp(302,37): warning C4838: conversion from 'unsigned __int64' to 'int' requires a narrowing conversion
-C:\work\diamond_rush_remake\diamond_rush\src\main.cpp(302,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  player.cpp
-  player.h
-  wall.cpp
-  Generating Code...
+C:\work\diamond_rush_remake\diamond_rush\src\main.cpp(323,37): warning C4838: conversion from 'unsigned __int64' to 'int' requires a narrowing conversion
+C:\work\diamond_rush_remake\diamond_rush\src\main.cpp(323,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 x64\Debug\player.obj : warning LNK4042: object specified more than once; extras ignored
   diamond_rush.vcxproj -> C:\work\diamond_rush_remake\diamond_rush\x64\Debug\diamond_rush.exe

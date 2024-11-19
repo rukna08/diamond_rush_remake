@@ -117,16 +117,21 @@ int animation_speed = 1200;
 void draw() {
     play_animation(current_idle_animation);
 
-    if (engine_mode) show_grid(level_grid,renderer);
+    if (engine_mode) {
+        show_grid(level_grid, renderer);
+    }
+
     SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
     if (engine_mode) draw_text("Engine Mode", 1100, 0, &color_white);
     else draw_text("Game Mode", 1100, 0, &color_white);
-
 
     if (engine_mode) {
         // Display Player Position On Screen For Reference.
         std::string position = std::to_string(player->rect.x) + "," + std::to_string(player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
+        draw_text("Save Level    - R", 1100, 20, &color_white);
+        draw_text("Destroy Level - L", 1100, 40, &color_white);
+        draw_text("Reload Level  - Y", 1100, 60, &color_white);
     }
 
 
@@ -181,6 +186,8 @@ void process_input() {
 
         case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_ESCAPE) {
+                map_reset();
+                save_map(walls, 0);
                 is_game_running = false;
             }
             if (event.key.keysym.sym == SDLK_w && !engine_mode) {
@@ -206,7 +213,7 @@ void process_input() {
                 //do the map reset here.
                 
             }
-            if (event.key.keysym.sym == SDLK_l && !engine_mode) {
+            if (event.key.keysym.sym == SDLK_l && engine_mode) {
                 destroy_map(walls);
             }
 
@@ -258,6 +265,8 @@ void process_input() {
             break;
 
         case SDL_QUIT:
+            map_reset();
+            save_map(walls, 0);
             is_game_running = false;
             break;
 
