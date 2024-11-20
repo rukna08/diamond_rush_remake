@@ -11,21 +11,21 @@ Player::Player(SDL_Renderer* renderer, int unit_x, int unit_y) {
     speed = 1;
 }
 
-void Player::move(const std::string& direction) {
+void Player::move(const std::string& dir) {
     if (!can_move_up && !can_move_down && !can_move_left && !can_move_right) {
-        if (direction == "right") {
+        if (dir == "right") {
             destination = rect.x + SPRITE_SIZE;
             can_move_right = true;
         }
-        else if (direction == "left") {
+        else if (dir == "left") {
             destination = rect.x - SPRITE_SIZE;
             can_move_left = true;
         }
-        else if (direction == "up") {
+        else if (dir == "up") {
             destination = rect.y - SPRITE_SIZE;
             can_move_up = true;
         }
-        else if (direction == "down") {
+        else if (dir == "down") {
             destination = rect.y + SPRITE_SIZE;
             can_move_down = true;
         }
@@ -68,21 +68,21 @@ void Player::move_constant_up() {
     }
 }
 
-void Player::check_collision( std::vector<Wall>& walls) {
+void Player::check_collision( std::vector<Wall>& wall) {
     
     SDL_Point right_tile_point = { rect.x + (SPRITE_SIZE), rect.y };
     SDL_Point left_tile_point  = { rect.x - 1, rect.y };
     SDL_Point up_tile_point    = { rect.x, rect.y - 1 };
     SDL_Point down_tile_point  = { rect.x, rect.y + SPRITE_SIZE };
 
-    for (int i = 0; i < walls.size(); i++) {
-        if (SDL_PointInRect(&right_tile_point, &walls[i].rect)) {
+    for (int i = 0; i < wall.size(); i++) {
+        if (SDL_PointInRect(&right_tile_point, &wall[i].rect)) {
             can_move_right = false;
-        } else if (SDL_PointInRect(&left_tile_point, &walls[i].rect)) {
+        } else if (SDL_PointInRect(&left_tile_point, &wall[i].rect)) {
             can_move_left  = false;
-        } else if (SDL_PointInRect(&up_tile_point, &walls[i].rect)) {
+        } else if (SDL_PointInRect(&up_tile_point, &wall[i].rect)) {
             can_move_up    = false;
-        } else if (SDL_PointInRect(&down_tile_point, &walls[i].rect)) {
+        } else if (SDL_PointInRect(&down_tile_point, &wall[i].rect)) {
             can_move_down  = false;
         }
     }

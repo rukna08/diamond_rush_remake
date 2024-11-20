@@ -25,5 +25,5 @@ public:
     void move_constant_left();
     void move_constant_down();
     void move_constant_up();
-    void check_collision( std::vector<Wall>&);
+    void check_collision(std::vector<Wall>&);
 };
