@@ -19,11 +19,11 @@ public:
     bool can_move_down;
     int speed;
 
-    Player(SDL_Renderer* renderer, int unit_x, int unit_y);
-    void move(const std::string& direction);
+    Player(SDL_Renderer*,int,int);
+    void move(const std::string& );
     void move_constant_right();
     void move_constant_left();
     void move_constant_down();
     void move_constant_up();
-    void check_collision( std::vector<Wall>& walls);
+    void check_collision( std::vector<Wall>&);
 };
