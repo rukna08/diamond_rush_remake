@@ -94,8 +94,7 @@ int main(int argc, char* argv[]) {
 
 std::string current_animation = "player_idle_right";
 int animation_index = 0;
-int frames = 0;
-float animation_speed = 120; // Temporary. Change to int if experiment fails.
+float animation_speed = 240;
 void draw() {
     play_animation(current_animation);
 
@@ -181,48 +180,14 @@ void play_animation(const std::string& animation_name) {
     }
 }
 
-//
-//                                      IMPORTANT
-// I didn't use any external resource like stackoverflow or chatgpt. I created this code through
-// some logic from my brain. But now I can't figure it out, so have to give this a thought.
-//
-//
-// Maybe use elapsed time for better control.
-//
-
+// Maybe elapased time or frame calculations can be used in the future.
 float new_animation_speed = animation_speed;
 void update_animation() {
-    /*if (frames % animation_speed == 0) {
-        animation_index++;
-    }*/
-    /*if (current_animation == "player_idle_right" || current_animation == "player_idle_left") {
-        if (animation_index == animation_player_idle_list.size()) {
-            animation_index = 0;
-        }
-    }
-    if (current_animation == "player_walk_right" || current_animation == "player_walk_left") {
-        if (animation_index == animation_player_walk_list.size()) {
-            animation_index = 0;
-        }
-    }*/
-
     if (new_animation_speed <= 0) {
         new_animation_speed = animation_speed;
         animation_index++;
     }
-
     new_animation_speed -= 0.5f;
-    std::cout << "new_animation_speed: " << new_animation_speed << std::endl;
-
-    /*if (frames == animation_speed) {
-        frames = 0;
-    }
-    frames++;
-
-    std::cout << std::endl;
-    std::cout << "current_animation: " << current_animation << std::endl;
-    std::cout << "animation_index: "   << animation_index   << std::endl;
-    std::cout << std::endl;*/
 }
 
 void draw_wall(std::vector<Wall> walls) {
@@ -268,35 +233,34 @@ void process_input() {
     // WASD Control
     if (!is_player_moving && !engine_mode) {
         if (!key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
-            !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) {
-            
+            !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) 
+        {
             player->rect.x++;
             last_key_held = 'd';
             is_player_moving = true;
-            
             current_animation = "player_walk_right";
-
         }
 
         if (!key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
-            !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) {
-            
+            !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
+        {    
             player->rect.x--;
             last_key_held = 'a';
             is_player_moving = true;
-
             current_animation = "player_walk_left";
         }
 
         if (key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
-            !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) {
+            !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
+        {
             player->rect.y--;
             last_key_held = 'w';
             is_player_moving = true;
         }
 
         if (!key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
-            key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) {
+            key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
+        {
             player->rect.y++;
             last_key_held = 's';
             is_player_moving = true;
@@ -316,8 +280,6 @@ void process_input() {
         case 'a': {
             if ((int)player->rect.x % 64 == 0) {
                 is_player_moving = false;
-                
-                // change this into set_current_animation(anim, index)
                 current_animation = "player_idle_left";
             }
             if ((int)player->rect.x % 64 != 0) {
