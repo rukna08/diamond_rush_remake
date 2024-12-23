@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
 std::string current_animation = "player_idle_right";
 int animation_index = 0;
 int frames = 0;
-int animation_speed = 60;
+float animation_speed = 120; // Temporary. Change to int if experiment fails.
 void draw() {
     play_animation(current_animation);
 
@@ -130,6 +130,9 @@ void draw() {
 void play_animation(const std::string& animation_name) {
     if (animation_name == "player_idle_right") {
         if (!engine_mode) {
+            if (animation_index >= animation_player_idle_list.size()) {
+                animation_index = 0;
+            }
             player->texture = animation_player_idle_list[animation_index];
             SDL_RenderCopyF(renderer, player->texture, 0, &player->rect);
         }
@@ -140,6 +143,9 @@ void play_animation(const std::string& animation_name) {
 
     if (animation_name == "player_idle_left") {
         if (!engine_mode) {
+            if (animation_index >= animation_player_idle_list.size()) {
+                animation_index = 0;
+            }
             player->texture = animation_player_idle_list[animation_index];
             SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect, 0, 0, SDL_FLIP_HORIZONTAL);
         }
@@ -150,6 +156,9 @@ void play_animation(const std::string& animation_name) {
 
     if (animation_name == "player_walk_right") {
         if (!engine_mode) {
+            if (animation_index >= animation_player_walk_list.size()) {
+                animation_index = 0;
+            }
             player->texture = animation_player_walk_list[animation_index];
             SDL_RenderCopyF(renderer, player->texture, 0, &player->rect);
         }
@@ -160,6 +169,9 @@ void play_animation(const std::string& animation_name) {
 
     if (animation_name == "player_walk_left") {
         if (!engine_mode) {
+            if (animation_index >= animation_player_walk_list.size()) {
+                animation_index = 0;
+            }
             player->texture = animation_player_walk_list[animation_index];
             SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect, 0, 0, SDL_FLIP_HORIZONTAL);
         }
@@ -174,10 +186,15 @@ void play_animation(const std::string& animation_name) {
 // I didn't use any external resource like stackoverflow or chatgpt. I created this code through
 // some logic from my brain. But now I can't figure it out, so have to give this a thought.
 //
+//
+// Maybe use elapsed time for better control.
+//
+
+float new_animation_speed = animation_speed;
 void update_animation() {
-    if (frames % animation_speed == 0) {
+    /*if (frames % animation_speed == 0) {
         animation_index++;
-    }
+    }*/
     if (current_animation == "player_idle_right" || current_animation == "player_idle_left") {
         if (animation_index == animation_player_idle_list.size()) {
             animation_index = 0;
@@ -188,7 +205,16 @@ void update_animation() {
             animation_index = 0;
         }
     }
-    if (frames == animation_speed) {
+
+    if (new_animation_speed <= 0) {
+        new_animation_speed = animation_speed;
+        animation_index++;
+    }
+
+    new_animation_speed -= 0.5f;
+    std::cout << "new_animation_speed: " << new_animation_speed << std::endl;
+
+    /*if (frames == animation_speed) {
         frames = 0;
     }
     frames++;
@@ -196,7 +222,7 @@ void update_animation() {
     std::cout << std::endl;
     std::cout << "current_animation: " << current_animation << std::endl;
     std::cout << "animation_index: "   << animation_index   << std::endl;
-    std::cout << std::endl;
+    std::cout << std::endl;*/
 }
 
 void draw_wall(std::vector<Wall> walls) {
