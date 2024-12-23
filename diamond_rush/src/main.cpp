@@ -195,7 +195,7 @@ void update_animation() {
     /*if (frames % animation_speed == 0) {
         animation_index++;
     }*/
-    if (current_animation == "player_idle_right" || current_animation == "player_idle_left") {
+    /*if (current_animation == "player_idle_right" || current_animation == "player_idle_left") {
         if (animation_index == animation_player_idle_list.size()) {
             animation_index = 0;
         }
@@ -204,7 +204,7 @@ void update_animation() {
         if (animation_index == animation_player_walk_list.size()) {
             animation_index = 0;
         }
-    }
+    }*/
 
     if (new_animation_speed <= 0) {
         new_animation_speed = animation_speed;
@@ -274,10 +274,8 @@ void process_input() {
             last_key_held = 'd';
             is_player_moving = true;
             
-            if (current_animation != "player_walk_right") {
-                current_animation = "player_walk_right";
-                animation_index = 0;
-            }
+            current_animation = "player_walk_right";
+
         }
 
         if (!key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
@@ -287,11 +285,7 @@ void process_input() {
             last_key_held = 'a';
             is_player_moving = true;
 
-
-            if (current_animation != "player_walk_left") {
-                current_animation = "player_walk_left";
-                animation_index = 0;
-            }
+            current_animation = "player_walk_left";
         }
 
         if (key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
@@ -324,10 +318,7 @@ void process_input() {
                 is_player_moving = false;
                 
                 // change this into set_current_animation(anim, index)
-                if (current_animation != "player_idle_left") {
-                    current_animation = "player_idle_left";
-                    animation_index = 0;
-                }
+                current_animation = "player_idle_left";
             }
             if ((int)player->rect.x % 64 != 0) {
                 player->rect.x -= change;
@@ -346,10 +337,7 @@ void process_input() {
         case 'd': {
             if ((int)player->rect.x % 64 == 0) {
                 is_player_moving = false;
-                if (current_animation != "player_idle_right") {
-                    current_animation = "player_idle_right";
-                    animation_index = 0;
-                }
+                current_animation = "player_idle_right";
             }
             if ((int)player->rect.x % 64 != 0) {
                 player->rect.x += change;
