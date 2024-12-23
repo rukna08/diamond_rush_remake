@@ -31,6 +31,7 @@ SDL_Surface* text_surface;
 SDL_Texture* text_texture;
 float camera_offset = 40.0f;
 std::vector<SDL_Texture*> animation_player_idle_list;
+std::vector<SDL_Texture*> animation_player_walk_list;
 
 bool is_game_running = true;
 
@@ -81,7 +82,7 @@ int main(int argc, char* argv[]) {
 
         process_input();
     }
-
+    
     // Unload
     IMG_Quit();
     SDL_DestroyWindow(window);
@@ -92,9 +93,9 @@ int main(int argc, char* argv[]) {
 }
 
 std::string current_animation = "player_idle_right";
-int animation_index_player_idle = 0;
+int animation_index = 0;
 int frames = 0;
-int animation_speed = 600;
+int animation_speed = 60;
 void draw() {
     play_animation(current_animation);
 
@@ -123,10 +124,13 @@ void draw() {
     update_animation();
 }
 
+// The global variable current_animation (the main variable controlling which animation to play)
+// is basically defined here. Like these are the choices.
+
 void play_animation(const std::string& animation_name) {
     if (animation_name == "player_idle_right") {
         if (!engine_mode) {
-            player->texture = animation_player_idle_list[animation_index_player_idle];
+            player->texture = animation_player_idle_list[animation_index];
             SDL_RenderCopyF(renderer, player->texture, 0, &player->rect);
         }
         else {
@@ -136,25 +140,63 @@ void play_animation(const std::string& animation_name) {
 
     if (animation_name == "player_idle_left") {
         if (!engine_mode) {
-            player->texture = animation_player_idle_list[animation_index_player_idle];
-            SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect, 0, 0,
-                SDL_FLIP_HORIZONTAL);
+            player->texture = animation_player_idle_list[animation_index];
+            SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect, 0, 0, SDL_FLIP_HORIZONTAL);
         }
         else {
-            SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect, 0, 0,
-                SDL_FLIP_HORIZONTAL);
+            SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect, 0, 0, SDL_FLIP_HORIZONTAL);
+        }
+    }
+
+    if (animation_name == "player_walk_right") {
+        if (!engine_mode) {
+            player->texture = animation_player_walk_list[animation_index];
+            SDL_RenderCopyF(renderer, player->texture, 0, &player->rect);
+        }
+        else {
+            SDL_RenderCopyF(renderer, player->texture, 0, &player->rect);
+        }
+    }
+
+    if (animation_name == "player_walk_left") {
+        if (!engine_mode) {
+            player->texture = animation_player_walk_list[animation_index];
+            SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect, 0, 0, SDL_FLIP_HORIZONTAL);
+        }
+        else {
+            SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect,0, 0, SDL_FLIP_HORIZONTAL);
         }
     }
 }
 
+//
+//                                      IMPORTANT
+// I didn't use any external resource like stackoverflow or chatgpt. I created this code through
+// some logic from my brain. But now I can't figure it out, so have to give this a thought.
+//
 void update_animation() {
     if (frames % animation_speed == 0) {
-        animation_index_player_idle++;
+        animation_index++;
     }
-    if (animation_index_player_idle == animation_player_idle_list.size())
-        animation_index_player_idle = 0;
-    if (frames == animation_speed) frames = 0;
+    if (current_animation == "player_idle_right" || current_animation == "player_idle_left") {
+        if (animation_index == animation_player_idle_list.size()) {
+            animation_index = 0;
+        }
+    }
+    if (current_animation == "player_walk_right" || current_animation == "player_walk_left") {
+        if (animation_index == animation_player_walk_list.size()) {
+            animation_index = 0;
+        }
+    }
+    if (frames == animation_speed) {
+        frames = 0;
+    }
     frames++;
+
+    std::cout << std::endl;
+    std::cout << "current_animation: " << current_animation << std::endl;
+    std::cout << "animation_index: "   << animation_index   << std::endl;
+    std::cout << std::endl;
 }
 
 void draw_wall(std::vector<Wall> walls) {
@@ -206,7 +248,10 @@ void process_input() {
             last_key_held = 'd';
             is_player_moving = true;
             
-            current_animation = "player_idle_right";
+            if (current_animation != "player_walk_right") {
+                current_animation = "player_walk_right";
+                animation_index = 0;
+            }
         }
 
         if (!key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
@@ -216,7 +261,11 @@ void process_input() {
             last_key_held = 'a';
             is_player_moving = true;
 
-            current_animation = "player_idle_left";
+
+            if (current_animation != "player_walk_left") {
+                current_animation = "player_walk_left";
+                animation_index = 0;
+            }
         }
 
         if (key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
@@ -247,6 +296,12 @@ void process_input() {
         case 'a': {
             if ((int)player->rect.x % 64 == 0) {
                 is_player_moving = false;
+                
+                // change this into set_current_animation(anim, index)
+                if (current_animation != "player_idle_left") {
+                    current_animation = "player_idle_left";
+                    animation_index = 0;
+                }
             }
             if ((int)player->rect.x % 64 != 0) {
                 player->rect.x -= change;
@@ -265,6 +320,10 @@ void process_input() {
         case 'd': {
             if ((int)player->rect.x % 64 == 0) {
                 is_player_moving = false;
+                if (current_animation != "player_idle_right") {
+                    current_animation = "player_idle_right";
+                    animation_index = 0;
+                }
             }
             if ((int)player->rect.x % 64 != 0) {
                 player->rect.x += change;
@@ -295,7 +354,10 @@ void draw_text(std::string text, float x, float y, SDL_Color* color) {
 }
 
 void init_animation() {
-    // Player Idle Animation
+
+    // Change all this in loops.
+
+    // Player Idle Animation.
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/0.png"));
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/1.png"));
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/2.png"));
@@ -305,6 +367,12 @@ void init_animation() {
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/6.png"));
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/7.png"));
     animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/8.png"));
+    
+    // Player Walk Animation.
+    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/0.png"));
+    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/1.png"));
+    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/2.png"));
+    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/3.png"));
 }
 
 // Generated by ChatGPT.
