@@ -37,7 +37,7 @@ bool is_game_running = true;
 const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 char last_key_held = 'w';
 bool is_player_moving = false;
-float change = 0.5f;
+float change = 0.1f;
 
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
@@ -58,8 +58,7 @@ SDL_Color color_white = { 255, 255, 255, 255 };
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN,
-        &window, &renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN, &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     player = new Player(renderer, 2.0f, 2.0f);
@@ -67,12 +66,10 @@ int main(int argc, char* argv[]) {
     // Load the game map.
     reload_map(walls, renderer);
 
-    // Grid Creation.
     create_level_grid_rects(level_grid);
 
     draw_text_init();
 
-    // Initialize Animation System.
     init_animation();
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -86,7 +83,6 @@ int main(int argc, char* argv[]) {
     }
 
     // Unload
-
     IMG_Quit();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
@@ -95,12 +91,12 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-std::string current_idle_animation = "player_idle_right";
+std::string current_animation = "player_idle_right";
 int animation_index_player_idle = 0;
 int frames = 0;
-int animation_speed = 1200;
+int animation_speed = 600;
 void draw() {
-    play_animation(current_idle_animation);
+    play_animation(current_animation);
 
     if (engine_mode) {
         show_grid(level_grid, renderer);
@@ -114,8 +110,7 @@ void draw() {
 
     if (engine_mode) {
         // Display Player Position On Screen For Reference.
-        std::string position =
-            std::to_string(player->rect.x) + "," + std::to_string(player->rect.y);
+        std::string position = std::to_string(player->rect.x) + "," + std::to_string(player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
         draw_text("Save Level    - R", 1100, 20, &color_white);
         draw_text("Destroy Level - L", 1100, 40, &color_white);
@@ -201,19 +196,27 @@ void process_input() {
 
     }
 
+
+    // WASD Control
     if (!is_player_moving && !engine_mode) {
         if (!key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) {
+            
             player->rect.x++;
             last_key_held = 'd';
             is_player_moving = true;
+            
+            current_animation = "player_idle_right";
         }
 
         if (!key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) {
+            
             player->rect.x--;
             last_key_held = 'a';
             is_player_moving = true;
+
+            current_animation = "player_idle_left";
         }
 
         if (key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
@@ -230,42 +233,43 @@ void process_input() {
             is_player_moving = true;
         }
     }
+
     switch (last_key_held) {
-    case 'w': {
-        if ((int)player->rect.y % 64 == 0) {
-            is_player_moving = false;
-        }
-        if ((int)player->rect.y % 64 != 0) {
-            player->rect.y -= change;
-        }
-    } break;
+        case 'w': {
+            if ((int)player->rect.y % 64 == 0) {
+                is_player_moving = false;
+            }
+            if ((int)player->rect.y % 64 != 0) {
+                player->rect.y -= change;
+            }
+        } break;
 
-    case 'a': {
-        if ((int)player->rect.x % 64 == 0) {
-            is_player_moving = false;
-        }
-        if ((int)player->rect.x % 64 != 0) {
-            player->rect.x -= change;
-        }
-    } break;
+        case 'a': {
+            if ((int)player->rect.x % 64 == 0) {
+                is_player_moving = false;
+            }
+            if ((int)player->rect.x % 64 != 0) {
+                player->rect.x -= change;
+            }
+        } break;
 
-    case 's': {
-        if ((int)player->rect.y % 64 == 0) {
-            is_player_moving = false;
-        }
-        if ((int)player->rect.y % 64 != 0) {
-            player->rect.y += change;
-        }
-    } break;
+        case 's': {
+            if ((int)player->rect.y % 64 == 0) {
+                is_player_moving = false;
+            }
+            if ((int)player->rect.y % 64 != 0) {
+                player->rect.y += change;
+            }
+        } break;
 
-    case 'd': {
-        if ((int)player->rect.x % 64 == 0) {
-            is_player_moving = false;
-        }
-        if ((int)player->rect.x % 64 != 0) {
-            player->rect.x += change;
-        }
-    } break;
+        case 'd': {
+            if ((int)player->rect.x % 64 == 0) {
+                is_player_moving = false;
+            }
+            if ((int)player->rect.x % 64 != 0) {
+                player->rect.x += change;
+            }
+        } break;
     }
 }
 
@@ -292,24 +296,15 @@ void draw_text(std::string text, float x, float y, SDL_Color* color) {
 
 void init_animation() {
     // Player Idle Animation
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/0.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/1.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/2.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/3.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/4.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/5.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/6.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/7.png"));
-    animation_player_idle_list.push_back(
-        IMG_LoadTexture(renderer, "data/animation/player_idle/8.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/0.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/1.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/2.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/3.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/4.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/5.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/6.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/7.png"));
+    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/8.png"));
 }
 
 // Generated by ChatGPT.
