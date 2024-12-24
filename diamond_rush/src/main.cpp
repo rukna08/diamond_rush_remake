@@ -38,7 +38,7 @@ bool is_game_running = true;
 const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 char last_key_held = 'w';
 bool is_player_moving = false;
-float change = 0.3f;
+float change = 0.1f;
 
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
@@ -55,6 +55,10 @@ void update_animation();
 void remove_wall_pixels(float, float);
 void map_reset();
 void camera_controls(SDL_Event*);
+bool is_wall_on_right_side();
+bool is_wall_on_left_side();
+bool is_wall_on_up_side();
+bool is_wall_on_down_side();
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -312,7 +316,7 @@ void process_input() {
     }
 
     else if (!is_player_moving && !engine_mode) {
-        if (!key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
+        if (!is_wall_on_right_side() && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) 
         {
             player->rect.x++;
@@ -321,7 +325,7 @@ void process_input() {
             current_animation = "player_walk_right";
         }
 
-        if (!key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
+        if (!is_wall_on_left_side() && !key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {    
             player->rect.x--;
@@ -330,7 +334,7 @@ void process_input() {
             current_animation = "player_walk_left";
         }
 
-        if (key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
+        if (!is_wall_on_up_side() && key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {
             player->rect.y--;
@@ -338,7 +342,7 @@ void process_input() {
             is_player_moving = true;
         }
 
-        if (!key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
+        if (!is_wall_on_down_side() && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {
             player->rect.y++;
@@ -489,4 +493,42 @@ void map_reset() {
         }
         direction_stream.pop();
     }
+}
+
+// Collison detection between player and wall.
+bool is_wall_on_right_side() {
+    SDL_Point right_tile_point = { player->rect.x + (SPRITE_SIZE), player->rect.y };
+    for (int i = 0; i < walls.size(); i++) {
+        if (SDL_PointInRect(&right_tile_point, &walls[i].rect)) {
+            return true;
+        }
+    }
+    return false;
+}
+bool is_wall_on_left_side() {
+    SDL_Point left_tile_point = { player->rect.x - 1, player->rect.y };
+    for (int i = 0; i < walls.size(); i++) {
+        if (SDL_PointInRect(&left_tile_point, &walls[i].rect)) {
+            return true;
+        }
+    }
+    return false;
+}
+bool is_wall_on_up_side() {
+    SDL_Point up_tile_point = { player->rect.x, player->rect.y - 1 };
+    for (int i = 0; i < walls.size(); i++) {
+        if (SDL_PointInRect(&up_tile_point, &walls[i].rect)) {
+            return true;
+        }
+    }
+    return false;
+}
+bool is_wall_on_down_side() {
+    SDL_Point down_tile_point = { player->rect.x, player->rect.y + SPRITE_SIZE };
+    for (int i = 0; i < walls.size(); i++) {
+        if (SDL_PointInRect(&down_tile_point, &walls[i].rect)) {
+            return true;
+        }
+    }
+    return false;
 }

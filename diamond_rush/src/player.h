@@ -12,9 +12,8 @@ class Player {
 public:
     SDL_FRect rect;
     SDL_Texture* texture;
-    
+
 
     Player(SDL_Renderer*,float,float);
     ~Player();
-   // void check_collision(std::vector<Wall>&);
 };
