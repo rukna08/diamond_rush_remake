@@ -206,6 +206,8 @@ void process_input() {
         switch (event.type) {
         case SDL_QUIT:
             is_game_running = false;
+            map_reset();
+            save_map(walls, 0);
             break;
 
         case SDL_KEYDOWN:
@@ -214,7 +216,7 @@ void process_input() {
             }
             if (event.key.keysym.sym == SDLK_x) {
                 engine_mode = !engine_mode;
-                //map_reset();
+                map_reset();
             }
             if (event.key.keysym.sym == SDLK_y && !engine_mode) {
                 reload_map(walls, renderer);
@@ -225,21 +227,38 @@ void process_input() {
                 destroy_map(walls);
             }
             break;
+        case SDL_MOUSEBUTTONDOWN:
+            float x = event.motion.x;
+            float y = event.motion.y;
+            SDL_FPoint mouse_position = { x, y };
+
+            if (engine_mode) {
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    // Right-click
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
+                            place_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y, renderer);
+                        }
+                    }
+                }
+                else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    for (int i = 0; i < level_grid.size(); i++) {
+                        if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
+                            //delete that specific wall of location x,y
+                            remove_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y);
+                        }
+                    }
+                }
+
+            }
+
+            break;
         }
 
     }
     
-
-
-
-
-
-
-
-
-
     if (engine_mode) {
-        int step = 1;
+        signed int step = 1;
         const Uint8* keyStates = SDL_GetKeyboardState(NULL);
         if (keyStates[SDL_SCANCODE_W]) {
             while (step) {
@@ -291,21 +310,6 @@ void process_input() {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     else if (!is_player_moving && !engine_mode) {
         if (!key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
