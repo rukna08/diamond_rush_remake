@@ -38,7 +38,7 @@ bool is_game_running = true;
 const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 char last_key_held = 'w';
 bool is_player_moving = false;
-float change = 0.1f;
+float change = 0.3f;
 
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
@@ -54,12 +54,14 @@ void play_animation(const std::string&);
 void update_animation();
 void remove_wall_pixels(float, float);
 void map_reset();
+void camera_controls(SDL_Event*);
+
 
 SDL_Color color_white = { 255, 255, 255, 255 };
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN, &window, &renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN , &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     player = new Player(renderer, 2.0f, 2.0f);
@@ -94,7 +96,7 @@ int main(int argc, char* argv[]) {
 
 std::string current_animation = "player_idle_right";
 int animation_index = 0;
-float animation_speed = 240;
+float animation_speed = 300;
 void draw() {
     play_animation(current_animation);
 
@@ -196,6 +198,8 @@ void draw_wall(std::vector<Wall> walls) {
     }
 }
 
+
+
 void process_input() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -224,14 +228,86 @@ void process_input() {
         }
 
     }
-    // do engine mode controls
-    if (engine_mode) {
+    
 
+
+
+
+
+
+
+
+
+    if (engine_mode) {
+        int step = 1;
+        const Uint8* keyStates = SDL_GetKeyboardState(NULL);
+        if (keyStates[SDL_SCANCODE_W]) {
+            while (step) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->y += camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.y += camera_offset;
+                }
+                player->rect.y += camera_offset;
+                direction_stream.push('W');
+                step--;
+            }
+        }else if (keyStates[SDL_SCANCODE_A]) {
+            while (step) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->x += camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.x += camera_offset;
+                }
+                player->rect.x += camera_offset;
+                direction_stream.push('A');
+                step--;
+            }
+        }else if (keyStates[SDL_SCANCODE_S]) {
+            while (step) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->y -= camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.y -= camera_offset;
+                }
+                player->rect.y -= camera_offset;
+                direction_stream.push('S');
+                step--;
+            }
+        }if (keyStates[SDL_SCANCODE_D]) {
+            while (step) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    level_grid[i]->x -= camera_offset;
+                }
+                for (int i = 0; i < walls.size(); i++) {
+                    walls[i].rect.x -= camera_offset;
+                }
+                player->rect.x -= camera_offset;
+                direction_stream.push('D');
+                step--;
+            }
+        }
     }
 
 
-    // WASD Control
-    if (!is_player_moving && !engine_mode) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    else if (!is_player_moving && !engine_mode) {
         if (!key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) 
         {

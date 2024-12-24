@@ -11,9 +11,9 @@ void show_grid(std::vector<SDL_FRect*>& level_grid, SDL_Renderer* rndr) {
 
 void create_level_grid_rects(std::vector<SDL_FRect*>& level_grid) {
 
-	for (int y = 0; y < WINDOW_RES_Y * GRID_MULTIPLIER; y += SPRITE_SIZE) {
-		for (int x = 0; x < WINDOW_RES_X * GRID_MULTIPLIER; x += SPRITE_SIZE) {
-			level_grid.push_back(new SDL_FRect{ (float)x, (float)y, SPRITE_SIZE, SPRITE_SIZE });
+	for (float y = 0; y < WINDOW_RES_Y * GRID_MULTIPLIER; y += SPRITE_SIZE) {
+		for (float x = 0; x < WINDOW_RES_X * GRID_MULTIPLIER; x += SPRITE_SIZE) {
+			level_grid.push_back(new SDL_FRect{ x, y, SPRITE_SIZE, SPRITE_SIZE });
 
 		}
 	}
