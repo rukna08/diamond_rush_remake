@@ -351,44 +351,46 @@ void process_input() {
         }
     }
 
-    switch (last_key_held) {
-        case 'w': {
-            if ((int)player->rect.y % 64 == 0) {
-                is_player_moving = false;
-            }
-            if ((int)player->rect.y % 64 != 0) {
-                player->rect.y -= change;
-            }
-        } break;
+    if (!engine_mode) {
+        switch (last_key_held) {
+            case 'w': {
+                if ((int)player->rect.y % 64 == 0) {
+                    is_player_moving = false;
+                }
+                if ((int)player->rect.y % 64 != 0) {
+                    player->rect.y -= change;
+                }
+            } break;
 
-        case 'a': {
-            if ((int)player->rect.x % 64 == 0) {
-                is_player_moving = false;
-                current_animation = "player_idle_left";
-            }
-            if ((int)player->rect.x % 64 != 0) {
-                player->rect.x -= change;
-            }
-        } break;
+            case 'a': {
+                if ((int)player->rect.x % 64 == 0) {
+                    is_player_moving = false;
+                    current_animation = "player_idle_left";
+                }
+                if ((int)player->rect.x % 64 != 0) {
+                    player->rect.x -= change;
+                }
+            } break;
 
-        case 's': {
-            if ((int)player->rect.y % 64 == 0) {
-                is_player_moving = false;
-            }
-            if ((int)player->rect.y % 64 != 0) {
-                player->rect.y += change;
-            }
-        } break;
+            case 's': {
+                if ((int)player->rect.y % 64 == 0) {
+                    is_player_moving = false;
+                }
+                if ((int)player->rect.y % 64 != 0) {
+                    player->rect.y += change;
+                }
+            } break;
 
-        case 'd': {
-            if ((int)player->rect.x % 64 == 0) {
-                is_player_moving = false;
-                current_animation = "player_idle_right";
-            }
-            if ((int)player->rect.x % 64 != 0) {
-                player->rect.x += change;
-            }
-        } break;
+            case 'd': {
+                if ((int)player->rect.x % 64 == 0) {
+                    is_player_moving = false;
+                    current_animation = "player_idle_right";
+                }
+                if ((int)player->rect.x % 64 != 0) {
+                    player->rect.x += change;
+                }
+            } break;
+        }
     }
 }
 
