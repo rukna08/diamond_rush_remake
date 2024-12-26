@@ -19,6 +19,32 @@
 #include "player.h"
 #include "wall.h"
 
+// level_element::AIR starts from 0.
+enum level_element {
+    AIR,
+    PLAYER,
+    WALL
+};
+// Temporarily fixed the matrix size to 50x50.
+int level_matrix[50][50];
+
+
+// Ex: (1, 3) -> (192, 64)
+SDL_FPoint* matrix_to_pixel(int i, int j) {
+    float x = j * SPRITE_SIZE;
+    float y = i * SPRITE_SIZE;
+    return new SDL_FPoint { x, y };
+}
+
+// Ex: (192, 64) -> (1, 3)
+SDL_Point* pixel_to_matrix(float x, float y) {
+    int i = y / SPRITE_SIZE;
+    int j = x / SPRITE_SIZE;
+    return new SDL_Point{ i, j };
+}
+
+
+
 SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
@@ -80,6 +106,13 @@ int main(int argc, char* argv[]) {
     init_animation();
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+
+    SDL_FPoint* p = matrix_to_pixel(1, 3);
+    std::cout << "(" << p->x << "," << p->y << ")" << std::endl;
+
+    SDL_Point* pp = pixel_to_matrix(192, 64);
+    std::cout << "(" << pp->x << "," << pp->y << ")" << std::endl;
 
     // Game Loop.
     while (is_game_running) {
