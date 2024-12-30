@@ -136,11 +136,13 @@
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\player.h" />
     <ClCompile Include="src\wall.cpp" />
+    <ClCompile Include="src\stone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\grid_manager.h" />
     <ClInclude Include="src\map_manager.h" />
     <ClInclude Include="src\wall.h" />
+    <ClInclude Include="src\stone.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

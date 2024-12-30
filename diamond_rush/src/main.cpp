@@ -18,6 +18,7 @@
 #include "map_manager.h"
 #include "player.h"
 #include "wall.h"
+#include "stone.h"
 
 // level_element::AIR starts from 0.
 enum level_element {
@@ -49,6 +50,7 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
 std::vector<Wall> walls;
+std::vector<Stone> stones;
 std::vector<SDL_FRect*> level_grid;
 std::stack<char> direction_stream;
 
@@ -58,7 +60,8 @@ SDL_Texture* text_texture;
 float camera_offset = 40.0f;
 std::vector<SDL_Texture*> animation_player_idle_list;
 std::vector<SDL_Texture*> animation_player_walk_list;
-
+std::vector<SDL_Texture*> animation_stone_move_list;
+ 
 bool is_game_running = true;
 
 const Uint8* key_state = SDL_GetKeyboardState(nullptr);
@@ -70,7 +73,9 @@ float change = 0.1f;
 bool engine_mode = false;
 
 void draw();
-void draw_wall(std::vector<Wall>);
+void draw_walls();
+void draw_stones();
+void place_stone(float x, float y);
 void process_input();
 
 void draw_text(std::string, float, float, SDL_Color*);
@@ -114,10 +119,13 @@ int main(int argc, char* argv[]) {
     SDL_Point* pp = pixel_to_matrix(192, 64);
     std::cout << "(" << pp->x << "," << pp->y << ")" << std::endl;
 
+    place_stone(matrix_to_pixel(1, 5)->x, matrix_to_pixel(1, 5)->y);
+
     // Game Loop.
     while (is_game_running) {
         draw();
-        draw_wall(walls);
+        draw_walls();
+        draw_stones();
 
         process_input();
     }
@@ -149,7 +157,7 @@ void draw() {
 
     if (engine_mode) {
         // Display Player Position On Screen For Reference.
-        std::string position = std::to_string(player->rect.x) + "," + std::to_string(player->rect.y);
+        std::string position = std::to_string((int)player->rect.x) + "," + std::to_string((int)player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
         draw_text("Save Level    - R", 1100, 20, &color_white);
         draw_text("Destroy Level - L", 1100, 40, &color_white);
@@ -217,6 +225,23 @@ void play_animation(const std::string& animation_name) {
             SDL_RenderCopyExF(renderer, player->texture, 0, &player->rect,0, 0, SDL_FLIP_HORIZONTAL);
         }
     }
+
+    if (animation_name == "stone_move_right") {
+        if (!engine_mode) {
+            if (animation_index >= animation_stone_move_list.size()) {
+                animation_index = 0;
+            }
+            for (int i = 0; i < stones.size(); i++) {
+                stones[i].texture = animation_stone_move_list[animation_index];
+                SDL_RenderCopyF(renderer, stones[i].texture, 0, &stones[i].rect);
+            }
+        }
+        else {
+            for (int i = 0; i < stones.size(); i++) {
+                SDL_RenderCopyF(renderer, stones[i].texture, 0, &stones[i].rect);
+            }
+        }
+    }
 }
 
 // Maybe elapased time or frame calculations can be used in the future.
@@ -229,9 +254,15 @@ void update_animation() {
     new_animation_speed -= 0.5f;
 }
 
-void draw_wall(std::vector<Wall> walls) {
+void draw_walls() {
     for (int i = 0; i < walls.size(); i++) {
         SDL_RenderCopy(renderer, walls[i].texture, 0, &walls[i].rect);
+    }
+}
+
+void draw_stones() {
+    for (int i = 0; i < stones.size(); i++) {
+        SDL_RenderCopyF(renderer, stones[i].texture, 0, &stones[i].rect);
     }
 }
 
@@ -382,6 +413,13 @@ void process_input() {
             last_key_held = 's';
             is_player_moving = true;
         }
+
+        if (key_state[SDL_SCANCODE_F]) {
+            for (int i = 0; i < stones.size(); i++) {
+                current_animation = "stone_move_right";
+                stones[i].rect.x += 0.1;
+            }
+        }
     }
 
     if (!engine_mode) {
@@ -449,25 +487,18 @@ void draw_text(std::string text, float x, float y, SDL_Color* color) {
 }
 
 void init_animation() {
-
-    // Change all this in loops.
-
     // Player Idle Animation.
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/0.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/1.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/2.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/3.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/4.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/5.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/6.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/7.png"));
-    animation_player_idle_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_idle/8.png"));
-    
+    for (int i = 0; i <= 8; i++) {
+        animation_player_idle_list.push_back(IMG_LoadTexture(renderer, ("data/animation/player_idle/" + std::to_string(i) + ".png").c_str()));
+    }
     // Player Walk Animation.
-    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/0.png"));
-    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/1.png"));
-    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/2.png"));
-    animation_player_walk_list.push_back(IMG_LoadTexture(renderer, "data/animation/player_walk/3.png"));
+    for (int i = 0; i <= 3; i++) {
+        animation_player_walk_list.push_back(IMG_LoadTexture(renderer, ("data/animation/player_walk/" + std::to_string(i) + ".png").c_str()));
+    }
+    // Stone Move Animation.    
+    for (int i = 0; i <= 6; i++) {
+        animation_stone_move_list.push_back(IMG_LoadTexture(renderer, ("data/animation/stone_move/" + std::to_string(i) + ".png").c_str()));
+    }
 }
 
 // Generated by ChatGPT.
@@ -566,4 +597,8 @@ bool is_wall_on_down_side() {
         }
     }
     return false;
+}
+
+void place_stone(float x, float y) {
+    stones.push_back(Stone(x, y, "stone", renderer));
 }
