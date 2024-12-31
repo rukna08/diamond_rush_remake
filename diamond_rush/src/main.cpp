@@ -57,7 +57,7 @@ std::stack<char> direction_stream;
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
-float camera_offset = 40.0f;
+float camera_speed = 10;
 std::vector<SDL_Texture*> animation_player_idle_list;
 std::vector<SDL_Texture*> animation_player_walk_list;
 std::vector<SDL_Texture*> animation_stone_move_list;
@@ -112,14 +112,14 @@ int main(int argc, char* argv[]) {
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
+    // STONE DRAWING DEMO
+    //SDL_FPoint* p = matrix_to_pixel(1, 3);
+    //std::cout << "(" << p->x << "," << p->y << ")" << std::endl;
 
-    SDL_FPoint* p = matrix_to_pixel(1, 3);
-    std::cout << "(" << p->x << "," << p->y << ")" << std::endl;
+    //SDL_Point* pp = pixel_to_matrix(192, 64);
+    //std::cout << "(" << pp->x << "," << pp->y << ")" << std::endl;
 
-    SDL_Point* pp = pixel_to_matrix(192, 64);
-    std::cout << "(" << pp->x << "," << pp->y << ")" << std::endl;
-
-    place_stone(matrix_to_pixel(1, 5)->x, matrix_to_pixel(1, 5)->y);
+    //place_stone(matrix_to_pixel(1, 5)->x, matrix_to_pixel(1, 5)->y);
 
     // Game Loop.
     while (is_game_running) {
@@ -331,48 +331,48 @@ void process_input() {
         if (keyStates[SDL_SCANCODE_W]) {
             while (step) {
                 for (int i = 0; i < level_grid.size(); i++) {
-                    level_grid[i]->y += camera_offset;
+                    level_grid[i]->y += camera_speed;
                 }
                 for (int i = 0; i < walls.size(); i++) {
-                    walls[i].rect.y += camera_offset;
+                    walls[i].rect.y += camera_speed;
                 }
-                player->rect.y += camera_offset;
+                player->rect.y += camera_speed;
                 direction_stream.push('W');
                 step--;
             }
         }else if (keyStates[SDL_SCANCODE_A]) {
             while (step) {
                 for (int i = 0; i < level_grid.size(); i++) {
-                    level_grid[i]->x += camera_offset;
+                    level_grid[i]->x += camera_speed;
                 }
                 for (int i = 0; i < walls.size(); i++) {
-                    walls[i].rect.x += camera_offset;
+                    walls[i].rect.x += camera_speed;
                 }
-                player->rect.x += camera_offset;
+                player->rect.x += camera_speed;
                 direction_stream.push('A');
                 step--;
             }
         }else if (keyStates[SDL_SCANCODE_S]) {
             while (step) {
                 for (int i = 0; i < level_grid.size(); i++) {
-                    level_grid[i]->y -= camera_offset;
+                    level_grid[i]->y -= camera_speed;
                 }
                 for (int i = 0; i < walls.size(); i++) {
-                    walls[i].rect.y -= camera_offset;
+                    walls[i].rect.y -= camera_speed;
                 }
-                player->rect.y -= camera_offset;
+                player->rect.y -= camera_speed;
                 direction_stream.push('S');
                 step--;
             }
         }if (keyStates[SDL_SCANCODE_D]) {
             while (step) {
                 for (int i = 0; i < level_grid.size(); i++) {
-                    level_grid[i]->x -= camera_offset;
+                    level_grid[i]->x -= camera_speed;
                 }
                 for (int i = 0; i < walls.size(); i++) {
-                    walls[i].rect.x -= camera_offset;
+                    walls[i].rect.x -= camera_speed;
                 }
-                player->rect.x -= camera_offset;
+                player->rect.x -= camera_speed;
                 direction_stream.push('D');
                 step--;
             }
@@ -523,39 +523,39 @@ void map_reset() {
         // camera movement logic
         if (tmp == 'W') {
             for (int i = 0; i < level_grid.size(); i++) {
-                level_grid[i]->y -= camera_offset;
+                level_grid[i]->y -= camera_speed;
             }
             for (int i = 0; i < walls.size(); i++) {
-                walls[i].rect.y -= camera_offset;
+                walls[i].rect.y -= camera_speed;
             }
-            player->rect.y -= camera_offset;
+            player->rect.y -= camera_speed;
         }
         else if (tmp == 'A') {
             for (int i = 0; i < level_grid.size(); i++) {
-                level_grid[i]->x -= camera_offset;
+                level_grid[i]->x -= camera_speed;
             }
             for (int i = 0; i < walls.size(); i++) {
-                walls[i].rect.x -= camera_offset;
+                walls[i].rect.x -= camera_speed;
             }
-            player->rect.x -= camera_offset;
+            player->rect.x -= camera_speed;
         }
         else if (tmp == 'S') {
             for (int i = 0; i < level_grid.size(); i++) {
-                level_grid[i]->y += camera_offset;
+                level_grid[i]->y += camera_speed;
             }
             for (int i = 0; i < walls.size(); i++) {
-                walls[i].rect.y += camera_offset;
+                walls[i].rect.y += camera_speed;
             }
-            player->rect.y += camera_offset;
+            player->rect.y += camera_speed;
         }
         else if (tmp == 'D') {
             for (int i = 0; i < level_grid.size(); i++) {
-                level_grid[i]->x += camera_offset;
+                level_grid[i]->x += camera_speed;
             }
             for (int i = 0; i < walls.size(); i++) {
-                walls[i].rect.x += camera_offset;
+                walls[i].rect.x += camera_speed;
             }
-            player->rect.x += camera_offset;
+            player->rect.x += camera_speed;
         }
         direction_stream.pop();
     }
