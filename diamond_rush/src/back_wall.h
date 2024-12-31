@@ -8,10 +8,10 @@
 // global accross all the src files.
 #define SPRITE_SIZE 64
 
-class Grass {
+class Back_Wall {
 public:
 	SDL_Rect rect;
 	SDL_Texture* texture;
 	
-	Grass(int x, int y, SDL_Renderer* renderer);
+	Back_Wall(int x, int y, SDL_Renderer* renderer);
 };

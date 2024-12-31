@@ -36,7 +36,7 @@
     <ClCompile Include="src\stone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\grass.cpp">
+    <ClCompile Include="src\back_wall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClInclude Include="src\stone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\grass.h">
+    <ClInclude Include="src\back_wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

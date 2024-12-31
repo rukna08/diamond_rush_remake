@@ -19,10 +19,10 @@
 #include "player.h"
 #include "wall.h"
 #include "stone.h"
-#include "grass.h"
+#include "back_wall.h"
 
-// level_element::AIR starts from 0.
-enum level_element {
+// level_item::AIR starts from 0.
+enum level_item {
     AIR,
     PLAYER,
     WALL
@@ -52,7 +52,7 @@ SDL_Renderer* renderer;
 Player* player;
 std::vector<Wall> walls;
 std::vector<Stone> stones;
-std::vector<Grass> grasses;
+std::vector<Back_Wall> back_walls;
 std::vector<SDL_FRect*> level_grid;
 std::stack<char> direction_stream;
 
@@ -92,8 +92,8 @@ bool is_wall_on_right_side();
 bool is_wall_on_left_side();
 bool is_wall_on_up_side();
 bool is_wall_on_down_side();
-void place_grass(int x, int y);
-void draw_grasses();
+void place_back_wall(int x, int y);
+void draw_back_walls();
 
 SDL_Color color_white = { 255, 255, 255, 255 };
 
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    place_grass(0, 0);
+    place_back_wall(0, 0);
 
     // STONE DRAWING DEMO
     //SDL_FPoint* p = matrix_to_pixel(1, 3);
@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
         draw();
         draw_walls();
         //draw_stones();
-        draw_grasses();
+        draw_back_walls();
 
         process_input();
     }
@@ -610,15 +610,15 @@ void place_stone(float x, float y) {
     stones.push_back(Stone(x, y, "stone", renderer));
 }
 
-void place_grass(int x, int y) {
-    grasses.push_back(Grass(x, y, renderer));
+void place_back_wall(int x, int y) {
+    back_walls.push_back(Back_Wall(x, y, renderer));
 }
 
 
 // we should make a generic function which takes in a level_item_type
 // and draws it. same for placing them.
-void draw_grasses() {
-    for (int i = 0; i < grasses.size(); i++) {
-        SDL_RenderCopy(renderer, grasses[i].texture, 0, &grasses[i].rect);
+void draw_back_walls() {
+    for (int i = 0; i < back_walls.size(); i++) {
+        SDL_RenderCopy(renderer, back_walls[i].texture, 0, &back_walls[i].rect);
     }
 }
