@@ -8,6 +8,6 @@ Back_Wall::Back_Wall(int x, int y, SDL_Renderer* renderer) {
 	rect.y = y;
 	rect.w = SPRITE_SIZE;
 	rect.h = SPRITE_SIZE;
-
 	texture = IMG_LoadTexture(renderer, "data/sprite_back_wall.png");
+	type = "back_wall";
 }

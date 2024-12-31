@@ -1,5 +1,6 @@
 #pragma once
 #include "wall.h"
+#include "back_wall.h"
 #include <SDL.h>
 #include <vector>
 
@@ -13,3 +14,5 @@ void show_grid(std::vector<SDL_FRect*>&, SDL_Renderer*);
 void place_wall_pixels(std::vector<Wall>&, float, float, SDL_Renderer*);
 void place_wall(std::vector<Wall>&, float, float, SDL_Renderer*);
 void remove_wall_pixels(std::vector<Wall>& , float, float);
+void place_back_wall(int x, int y, SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls);
+void draw_back_walls(SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls);

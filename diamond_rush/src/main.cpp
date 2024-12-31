@@ -21,15 +21,16 @@
 #include "stone.h"
 #include "back_wall.h"
 
-// level_item::AIR starts from 0.
+// level_item::BACK_WALL starts from 0.
 enum level_item {
-    AIR,
+    BACK_WALL,
     PLAYER,
     WALL
 };
 // Temporarily fixed the matrix size to 50x50.
 int level_matrix[50][50];
 
+int current_level_item_to_be_placed = level_item::BACK_WALL;
 
 // Ex: (1, 3) -> (192, 64)
 SDL_FPoint* matrix_to_pixel(int i, int j) {
@@ -92,8 +93,9 @@ bool is_wall_on_right_side();
 bool is_wall_on_left_side();
 bool is_wall_on_up_side();
 bool is_wall_on_down_side();
-void place_back_wall(int x, int y);
-void draw_back_walls();
+void remove_back_walls(int x, int y);
+
+
 
 SDL_Color color_white = { 255, 255, 255, 255 };
 
@@ -102,10 +104,10 @@ int main(int argc, char* argv[]) {
     SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN , &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
-    player = new Player(renderer, 2.0f, 2.0f);
+    player = new Player(renderer, 3, 3);
 
     // Load the game map.
-    reload_map(walls, renderer);
+    reload_map(walls, back_walls, renderer);
 
     create_level_grid_rects(level_grid);
 
@@ -114,8 +116,6 @@ int main(int argc, char* argv[]) {
     init_animation();
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
-    place_back_wall(0, 0);
 
     // STONE DRAWING DEMO
     //SDL_FPoint* p = matrix_to_pixel(1, 3);
@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
         draw();
         draw_walls();
         //draw_stones();
-        draw_back_walls();
+        draw_back_walls(renderer, back_walls);
 
         process_input();
     }
@@ -281,7 +281,7 @@ void process_input() {
         case SDL_QUIT:
             is_game_running = false;
             map_reset();
-            save_map(walls, 0);
+            save_map(walls, back_walls, 0);
             break;
 
         case SDL_KEYDOWN:
@@ -293,7 +293,7 @@ void process_input() {
                 map_reset();
             }
             if (event.key.keysym.sym == SDLK_y && !engine_mode) {
-                reload_map(walls, renderer);
+                reload_map(walls, back_walls, renderer);
                 //do the map reset here.
 
             }
@@ -308,18 +308,31 @@ void process_input() {
 
             if (engine_mode) {
                 if (event.button.button == SDL_BUTTON_LEFT) {
-                    // Right-click
+
                     for (int i = 0; i < level_grid.size(); i++) {
                         if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
-                            place_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y, renderer);
+                            // Wall Placement during Engine Mode.
+                            if (current_level_item_to_be_placed == level_item::WALL) {
+                                place_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y, renderer);
+                            }
+                            // Back Wall Placement.
+                            if (current_level_item_to_be_placed == level_item::BACK_WALL) {
+                                place_back_wall(level_grid[i]->x, level_grid[i]->y, renderer, back_walls);
+                            }
                         }
                     }
+                    
                 }
                 else if (event.button.button == SDL_BUTTON_RIGHT) {
                     for (int i = 0; i < level_grid.size(); i++) {
                         if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
                             //delete that specific wall of location x,y
-                            remove_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y);
+                            if (current_level_item_to_be_placed == level_item::WALL) {
+                                remove_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y);   
+                            }
+                            if (current_level_item_to_be_placed == level_item::BACK_WALL) {
+                                remove_back_walls(level_grid[i]->x, level_grid[i]->y);
+                            }
                         }
                     }
                 }
@@ -342,6 +355,9 @@ void process_input() {
                 for (int i = 0; i < walls.size(); i++) {
                     walls[i].rect.y += camera_speed;
                 }
+                for (int i = 0; i < back_walls.size(); i++) {
+                    back_walls[i].rect.y += camera_speed;
+                }
                 player->rect.y += camera_speed;
                 direction_stream.push('W');
                 step--;
@@ -353,6 +369,9 @@ void process_input() {
                 }
                 for (int i = 0; i < walls.size(); i++) {
                     walls[i].rect.x += camera_speed;
+                }
+                for (int i = 0; i < back_walls.size(); i++) {
+                    back_walls[i].rect.x += camera_speed;
                 }
                 player->rect.x += camera_speed;
                 direction_stream.push('A');
@@ -366,6 +385,9 @@ void process_input() {
                 for (int i = 0; i < walls.size(); i++) {
                     walls[i].rect.y -= camera_speed;
                 }
+                for (int i = 0; i < back_walls.size(); i++) {
+                    back_walls[i].rect.y -= camera_speed;
+                }
                 player->rect.y -= camera_speed;
                 direction_stream.push('S');
                 step--;
@@ -377,6 +399,9 @@ void process_input() {
                 }
                 for (int i = 0; i < walls.size(); i++) {
                     walls[i].rect.x -= camera_speed;
+                }
+                for (int i = 0; i < back_walls.size(); i++) {
+                    back_walls[i].rect.x -= camera_speed;
                 }
                 player->rect.x -= camera_speed;
                 direction_stream.push('D');
@@ -509,13 +534,21 @@ void init_animation() {
 
 // Generated by ChatGPT.
 void remove_wall_pixels(float x, float y) {
-    auto it =
-        std::remove_if(walls.begin(), walls.end(), [x, y](const Wall& wall) {
+    auto it = std::remove_if(walls.begin(), walls.end(), [x, y](const Wall& wall) {
         return wall.rect.x == x && wall.rect.y == y;
-            });
-
+    });
     if (it != walls.end()) {
         walls.erase(it, walls.end());
+    }
+}
+
+void remove_back_walls(int x, int y) {
+    auto it = std::remove_if(back_walls.begin(), back_walls.end(), [x, y](const Back_Wall& back_wall) {
+        return back_wall.rect.x == x && back_wall.rect.y == y;
+    });
+
+    if (it != back_walls.end()) {
+        back_walls.erase(it, back_walls.end());
     }
 }
 
@@ -534,6 +567,9 @@ void map_reset() {
             for (int i = 0; i < walls.size(); i++) {
                 walls[i].rect.y -= camera_speed;
             }
+            for (int i = 0; i < back_walls.size(); i++) {
+                back_walls[i].rect.y -= camera_speed;
+            }
             player->rect.y -= camera_speed;
         }
         else if (tmp == 'A') {
@@ -542,6 +578,9 @@ void map_reset() {
             }
             for (int i = 0; i < walls.size(); i++) {
                 walls[i].rect.x -= camera_speed;
+            }
+            for (int i = 0; i < back_walls.size(); i++) {
+                back_walls[i].rect.x -= camera_speed;
             }
             player->rect.x -= camera_speed;
         }
@@ -552,6 +591,9 @@ void map_reset() {
             for (int i = 0; i < walls.size(); i++) {
                 walls[i].rect.y += camera_speed;
             }
+            for (int i = 0; i < back_walls.size(); i++) {
+                back_walls[i].rect.y += camera_speed;
+            }
             player->rect.y += camera_speed;
         }
         else if (tmp == 'D') {
@@ -560,6 +602,9 @@ void map_reset() {
             }
             for (int i = 0; i < walls.size(); i++) {
                 walls[i].rect.x += camera_speed;
+            }
+            for (int i = 0; i < back_walls.size(); i++) {
+                back_walls[i].rect.x += camera_speed;
             }
             player->rect.x += camera_speed;
         }
@@ -610,15 +655,3 @@ void place_stone(float x, float y) {
     stones.push_back(Stone(x, y, "stone", renderer));
 }
 
-void place_back_wall(int x, int y) {
-    back_walls.push_back(Back_Wall(x, y, renderer));
-}
-
-
-// we should make a generic function which takes in a level_item_type
-// and draws it. same for placing them.
-void draw_back_walls() {
-    for (int i = 0; i < back_walls.size(); i++) {
-        SDL_RenderCopy(renderer, back_walls[i].texture, 0, &back_walls[i].rect);
-    }
-}

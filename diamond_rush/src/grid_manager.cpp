@@ -37,3 +37,16 @@ void remove_wall_pixels(std::vector<Wall>& walls, float x, float y) {
 		walls.erase(it, walls.end());
 	}
 }
+
+void place_back_wall(int x, int y, SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls) {
+	back_walls.push_back(Back_Wall(x, y, renderer));
+}
+
+
+// we should make a generic function which takes in a level_item_type
+// and draws it. same for placing them.
+void draw_back_walls(SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls) {
+	for (int i = 0; i < back_walls.size(); i++) {
+		SDL_RenderCopy(renderer, back_walls[i].texture, 0, &back_walls[i].rect);
+	}
+}
