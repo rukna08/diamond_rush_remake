@@ -19,6 +19,7 @@
 #include "player.h"
 #include "wall.h"
 #include "stone.h"
+#include "grass.h"
 
 // level_element::AIR starts from 0.
 enum level_element {
@@ -51,6 +52,7 @@ SDL_Renderer* renderer;
 Player* player;
 std::vector<Wall> walls;
 std::vector<Stone> stones;
+std::vector<Grass> grasses;
 std::vector<SDL_FRect*> level_grid;
 std::stack<char> direction_stream;
 
@@ -90,7 +92,8 @@ bool is_wall_on_right_side();
 bool is_wall_on_left_side();
 bool is_wall_on_up_side();
 bool is_wall_on_down_side();
-
+void place_grass(int x, int y);
+void draw_grasses();
 
 SDL_Color color_white = { 255, 255, 255, 255 };
 
@@ -112,6 +115,8 @@ int main(int argc, char* argv[]) {
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
+    place_grass(0, 0);
+
     // STONE DRAWING DEMO
     //SDL_FPoint* p = matrix_to_pixel(1, 3);
     //std::cout << "(" << p->x << "," << p->y << ")" << std::endl;
@@ -125,7 +130,8 @@ int main(int argc, char* argv[]) {
     while (is_game_running) {
         draw();
         draw_walls();
-        draw_stones();
+        //draw_stones();
+        draw_grasses();
 
         process_input();
     }
@@ -600,5 +606,19 @@ bool is_wall_on_down_side() {
 }
 
 void place_stone(float x, float y) {
+    // remove this type argument from the class constructor.
     stones.push_back(Stone(x, y, "stone", renderer));
+}
+
+void place_grass(int x, int y) {
+    grasses.push_back(Grass(x, y, renderer));
+}
+
+
+// we should make a generic function which takes in a level_item_type
+// and draws it. same for placing them.
+void draw_grasses() {
+    for (int i = 0; i < grasses.size(); i++) {
+        SDL_RenderCopy(renderer, grasses[i].texture, 0, &grasses[i].rect);
+    }
 }

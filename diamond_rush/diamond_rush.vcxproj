@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\grass.cpp" />
     <ClCompile Include="src\grid_manager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\map_manager.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="src\stone.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\grass.h" />
     <ClInclude Include="src\grid_manager.h" />
     <ClInclude Include="src\map_manager.h" />
     <ClInclude Include="src\wall.h" />
