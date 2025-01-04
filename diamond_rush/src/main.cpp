@@ -654,4 +654,3 @@ void place_stone(float x, float y) {
     // remove this type argument from the class constructor.
     stones.push_back(Stone(x, y, "stone", renderer));
 }
-

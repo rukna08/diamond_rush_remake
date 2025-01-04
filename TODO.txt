@@ -42,30 +42,4 @@ in the future then we should simply keep an integer index.
 
 
 
---- Create a GUI Panel for displaying sprites of game entities in the engine mode
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--- Create a GUI Panel for displaying sprites of game entities in the engine mode.
