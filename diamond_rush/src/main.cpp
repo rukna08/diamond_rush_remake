@@ -351,13 +351,16 @@ void process_input() {
                     destroy_map(walls);
                 }
                 if (event.key.keysym.sym == SDLK_RIGHT && engine_mode) {
-                    
                     current_level_item_to_be_placed++;
-
                     if (current_level_item_to_be_placed == sprite_names.size()) {
                         current_level_item_to_be_placed = 1;
                     }
-
+                }
+                if (event.key.keysym.sym == SDLK_LEFT && engine_mode) {
+                    current_level_item_to_be_placed--;
+                    if (current_level_item_to_be_placed == 0) {
+                        current_level_item_to_be_placed = sprite_names.size() - 1;
+                    }
                 }
             } break;
 
