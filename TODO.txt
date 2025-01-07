@@ -1,3 +1,12 @@
+--- Perfomance different in different machines. Let us
+fix this issue together brothers and hoes.
+
+
+
+
+
+
+
 
 --- Make a list for holding the lists of game entities.
 

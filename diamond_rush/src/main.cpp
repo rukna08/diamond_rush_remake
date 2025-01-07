@@ -21,16 +21,66 @@
 #include "stone.h"
 #include "back_wall.h"
 
-// level_item::BACK_WALL starts from 0.
+// Sprite names for display in the engine mode.
+// This corresponds to the below level_item enum.
+std::vector<std::string> sprite_names = {
+    "Player",
+    "Wall",
+    "Back Wall"
+};
+
+// level_item::PLAYER starts from 0.
 enum level_item {
-    BACK_WALL,
     PLAYER,
-    WALL
+    WALL,
+    BACK_WALL
 };
 // Temporarily fixed the matrix size to 50x50.
-int level_matrix[50][50];
+void* level_matrix[50][50];
 
-int current_level_item_to_be_placed = level_item::BACK_WALL;
+//matrix = {
+//    0x123, 0x, 0x, 0x,
+//    0x, 0x, 0x, 0x
+//}
+//
+//vector* entites [] = { stone_address, back_wall_address, .., .., .., .., .., .. }
+//entity 0x111 -> vector walls []
+//
+//
+//fn(entities):
+//    walls = entities[level_item::WALL]
+//    back_walls = entieis[level_item::BACK_WALL]
+//    for i:
+//        use -> walls[i]
+//        use -> back_walls[i]
+//
+//fn update_matrix(entities):
+//    index
+//    index2
+//    entity
+//    for i, j:
+//        entity = entities[index]
+//        position = entity[index2].pos
+//        matrix[ptm.x][ptm.y] = entity
+//        
+//        /*
+//            ex:
+//            walls[0]
+//            back_walls[1]
+//        */
+//
+//storing entity addresses
+//matrix[][] = {
+//    null, null, null, null, null,
+//    null, null, null, null, null,
+//    null, null, null, null, null,
+//    null, null, null, null, null,
+//    null, null, null, null, null,
+//    null, null, null, null, null,
+//    null, null, null, null, null
+//}
+
+int current_level_item_to_be_placed = level_item::WALL;
 
 // Ex: (1, 3) -> (192, 64)
 SDL_FPoint* matrix_to_pixel(int i, int j) {
@@ -51,6 +101,7 @@ SDL_Point* pixel_to_matrix(float x, float y) {
 SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
+
 std::vector<Wall> walls;
 std::vector<Stone> stones;
 std::vector<Back_Wall> back_walls;
@@ -101,7 +152,7 @@ SDL_Color color_white = { 255, 255, 255, 255 };
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN , &window, &renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP , &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     player = new Player(renderer, 3, 3);
@@ -157,17 +208,18 @@ void draw() {
 
     SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
     if (engine_mode)
-        draw_text("Engine Mode", 1100, 0, &color_white);
+        draw_text("Engine Mode", 1000, 0, &color_white);
     else
-        draw_text("Game Mode", 1100, 0, &color_white);
+        draw_text("Game Mode", 1000, 0, &color_white);
 
     if (engine_mode) {
         // Display Player Position On Screen For Reference.
         std::string position = std::to_string((int)player->rect.x) + "," + std::to_string((int)player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
-        draw_text("Save Level    - R", 1100, 20, &color_white);
-        draw_text("Destroy Level - L", 1100, 40, &color_white);
-        draw_text("Reload Level  - Y", 1100, 60, &color_white);
+        draw_text("Save Level:     R", 1000, 20, &color_white);
+        draw_text("Destroy Level:  L", 1000, 40, &color_white);
+        draw_text("Reload Level:   Y", 1000, 60, &color_white);
+        draw_text("Placing Sprite: " + sprite_names[current_level_item_to_be_placed], 1000, 80, &color_white);
     }
 
     SDL_RenderPresent(renderer);
@@ -278,70 +330,77 @@ void process_input() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-        case SDL_QUIT:
-            is_game_running = false;
-            map_reset();
-            save_map(walls, back_walls, 0);
-            break;
-
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
+            case SDL_QUIT: {
                 is_game_running = false;
-            }
-            if (event.key.keysym.sym == SDLK_x) {
-                engine_mode = !engine_mode;
                 map_reset();
-            }
-            if (event.key.keysym.sym == SDLK_y && !engine_mode) {
-                reload_map(walls, back_walls, renderer);
-                //do the map reset here.
+                save_map(walls, back_walls, 0);
+            } break;
 
-            }
-            if (event.key.keysym.sym == SDLK_l && engine_mode) {
-                destroy_map(walls);
-            }
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            float x = event.motion.x;
-            float y = event.motion.y;
-            SDL_FPoint mouse_position = { x, y };
-
-            if (engine_mode) {
-                if (event.button.button == SDL_BUTTON_LEFT) {
-
-                    for (int i = 0; i < level_grid.size(); i++) {
-                        if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
-                            // Wall Placement during Engine Mode.
-                            if (current_level_item_to_be_placed == level_item::WALL) {
-                                place_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y, renderer);
-                            }
-                            // Back Wall Placement.
-                            if (current_level_item_to_be_placed == level_item::BACK_WALL) {
-                                place_back_wall(level_grid[i]->x, level_grid[i]->y, renderer, back_walls);
-                            }
-                        }
-                    }
+            case SDL_KEYDOWN: {
+                if (event.key.keysym.sym == SDLK_ESCAPE) {
+                    is_game_running = false;
+                }
+                if (event.key.keysym.sym == SDLK_x) {
+                    engine_mode = !engine_mode;
+                    map_reset();
+                }
+                if (event.key.keysym.sym == SDLK_y && !engine_mode) {
+                    reload_map(walls, back_walls, renderer);
+                }
+                if (event.key.keysym.sym == SDLK_l && engine_mode) {
+                    destroy_map(walls);
+                }
+                if (event.key.keysym.sym == SDLK_RIGHT && engine_mode) {
                     
+                    current_level_item_to_be_placed++;
+
+                    if (current_level_item_to_be_placed == sprite_names.size()) {
+                        current_level_item_to_be_placed = 1;
+                    }
+
                 }
-                else if (event.button.button == SDL_BUTTON_RIGHT) {
-                    for (int i = 0; i < level_grid.size(); i++) {
-                        if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
-                            //delete that specific wall of location x,y
-                            if (current_level_item_to_be_placed == level_item::WALL) {
-                                remove_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y);   
+            } break;
+
+            case SDL_MOUSEBUTTONDOWN: {
+                float x = event.motion.x;
+                float y = event.motion.y;
+                SDL_FPoint mouse_position = { x, y };
+
+                if (engine_mode) {
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+
+                        for (int i = 0; i < level_grid.size(); i++) {
+                            if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
+                                // Wall Placement during Engine Mode.
+                                if (current_level_item_to_be_placed == level_item::WALL) {
+                                    place_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y, renderer);
+                                }
+                                // Back Wall Placement.
+                                if (current_level_item_to_be_placed == level_item::BACK_WALL) {
+                                    place_back_wall(level_grid[i]->x, level_grid[i]->y, renderer, back_walls);
+                                }
                             }
-                            if (current_level_item_to_be_placed == level_item::BACK_WALL) {
-                                remove_back_walls(level_grid[i]->x, level_grid[i]->y);
+                        }
+
+                    }
+                    else if (event.button.button == SDL_BUTTON_RIGHT) {
+                        for (int i = 0; i < level_grid.size(); i++) {
+                            if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
+                                //delete that specific wall of location x,y
+                                if (current_level_item_to_be_placed == level_item::WALL) {
+                                    remove_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y);
+                                }
+                                if (current_level_item_to_be_placed == level_item::BACK_WALL) {
+                                    remove_back_walls(level_grid[i]->x, level_grid[i]->y);
+                                }
                             }
                         }
                     }
+
                 }
 
-            }
-
-            break;
+            } break;
         }
-
     }
     
     if (engine_mode) {
