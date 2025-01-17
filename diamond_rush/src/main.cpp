@@ -88,7 +88,7 @@ bool is_wall_on_up_side();
 bool is_wall_on_down_side();
 void remove_back_walls(int x, int y);
 void draw_engine_side_panel();
-
+void draw_entity_below_mouse();
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -148,7 +148,7 @@ void draw() {
         draw_engine_side_panel();
         
 
-        
+        draw_entity_below_mouse();
         
     }
     
@@ -642,9 +642,26 @@ void place_stone(float x, float y) {
 }
 
 
+void draw_entity_below_mouse() {
+    
+
+    int mouse_x;
+    int mouse_y;
+
+    SDL_GetMouseState(&mouse_x, &mouse_y);
+
+    SDL_Rect rect_below_mouse = { mouse_x - (SPRITE_SIZE / 2), mouse_y - (SPRITE_SIZE / 2), SPRITE_SIZE, SPRITE_SIZE };
+
+    // Set hte transparency value to some number between 0 and 255.
+    SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 100);
+    SDL_RenderCopy(renderer, level_sprites[current_level_item_to_be_placed], 0, &rect_below_mouse);
+    // Reset the transparency value of the sprite.
+    SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 255);
+}
+
+
 // Needs extreme amounts of optimisations like not recreating
 // the side_panel_rect each time every frame.
-
 void draw_engine_side_panel() {
 
     int starting_x = 1500;
