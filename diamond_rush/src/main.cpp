@@ -133,21 +133,24 @@ void draw() {
     play_animation(current_animation);
 
     if (engine_mode) {
-        draw_engine_side_panel();
-
-        draw_text("(X)    ENGINE MODE", 1000, 0, &color_white);
-
-        show_grid(level_grid, renderer);
 
         std::string position = std::to_string((int)player->rect.x) + "," + std::to_string((int)player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
 
+
+        show_grid(level_grid, renderer);
+        
+        draw_engine_side_panel();
+        
+
+        draw_text("(X)    ENGINE MODE", 1000, 0,    &color_white);
         draw_text("(R)    SAVE",         1000, 20,  &color_white);
         draw_text("(L)    DESTROY",      1000, 40,  &color_white);
         draw_text("(Y)    RELOAD",       1000, 60,  &color_white);
-        draw_text("(MB1)  PLACE ENTITY", 1000, 80, &color_white);
+        draw_text("(MB1)  PLACE ENTITY", 1000, 80,  &color_white);
         draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], 1000, 100, &color_white);
         draw_text("(WASD) MOVE CAMERA",  1000, 120, &color_white);
+        
     }
     
     if (!engine_mode) {
@@ -546,6 +549,8 @@ void map_reset() {
             for (int i = 0; i < level_grid.size(); i++) {
                 level_grid[i]->y -= camera_speed;
             }
+            // We need to do this for all the entities automatically.
+            // Another reason for creating a list of all entities.
             for (int i = 0; i < walls.size(); i++) {
                 walls[i].rect.y -= camera_speed;
             }
@@ -649,7 +654,7 @@ void draw_engine_side_panel() {
     };
 
 
-    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    SDL_SetRenderDrawColor(renderer, 23, 29, 27, 255);
     SDL_RenderFillRect(renderer, &side_panel_rect);
     SDL_RenderDrawRect(renderer, &side_panel_rect);
 
