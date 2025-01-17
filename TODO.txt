@@ -1,13 +1,7 @@
 --- Make a list for holding the lists of game entities.
 
-Ex: entities [] = [ stones, walls, back_walls, diamonds, grasses ]
+	Ex: entities [] = [ stones, walls, back_walls, diamonds, grasses ]
 
-Now we can pass the entities list to all the arrays instead
-of individually doing checks and creating functions of doing
-basic things for each new entity.
-
-
-
-
-
---- Create a GUI Panel for displaying sprites of game entities in the engine mode.
+	Now we can pass the entities list to all the arrays instead
+	of individually doing checks and creating functions of doing
+	basic things for each new entity.

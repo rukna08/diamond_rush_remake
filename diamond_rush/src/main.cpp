@@ -1,6 +1,5 @@
 #define SPRITE_SIZE 64
-#define WINDOW_RES_X 1280
-#define WINDOW_RES_Y 720
+
 #define ANGKOR_WAT "data/map_config_angkor_wat.level"
 
 #include <SDL.h>
@@ -648,7 +647,7 @@ void place_stone(float x, float y) {
 
 void draw_engine_side_panel() {
 
-    int starting_x = 900;
+    int starting_x = 1500;
     int starting_y = 0;
     int width      = WINDOW_RES_X - starting_x;
     int height     = WINDOW_RES_Y - starting_y;
