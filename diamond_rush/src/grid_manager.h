@@ -14,4 +14,3 @@ void show_grid(std::vector<SDL_FRect*>&, SDL_Renderer*);
 void remove_wall_pixels(std::vector<Wall>& , float, float);
 void place_wall(int x, int y, SDL_Renderer* renderer, std::vector<Wall>& walls);
 void place_back_wall(int x, int y, SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls);
-void draw_back_walls(SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls);

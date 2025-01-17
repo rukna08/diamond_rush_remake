@@ -1,8 +1,5 @@
 #include "back_wall.h"
 
-// This x and y is right now in screen coordinates
-// instead of matrix coordinates. Maybe we should
-// use matrix coordinates pretty soon.
 Back_Wall::Back_Wall(int x, int y, SDL_Renderer* renderer) {
 	rect.x = x;
 	rect.y = y;
