@@ -86,6 +86,7 @@ bool is_wall_on_left_side();
 bool is_wall_on_up_side();
 bool is_wall_on_down_side();
 void remove_back_walls(int x, int y);
+void draw_engine_side_panel();
 
 
 
@@ -132,6 +133,8 @@ void draw() {
     play_animation(current_animation);
 
     if (engine_mode) {
+        draw_engine_side_panel();
+
         draw_text("(X)    ENGINE MODE", 1000, 0, &color_white);
 
         show_grid(level_grid, renderer);
@@ -632,4 +635,22 @@ bool is_wall_on_down_side() {
 void place_stone(float x, float y) {
     // remove this type argument from the class constructor.
     stones.push_back(Stone(x, y, "stone", renderer));
+}
+
+void draw_engine_side_panel() {
+
+    int starting_x = 1000;
+    int starting_y = 0;
+    int width      = WINDOW_RES_X - starting_x;
+    int height     = WINDOW_RES_Y - starting_y;
+        
+    SDL_Rect side_panel_rect = {
+        starting_x, starting_y, width, height
+    };
+
+
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+    SDL_RenderFillRect(renderer, &side_panel_rect);
+    SDL_RenderDrawRect(renderer, &side_panel_rect);
+
 }
