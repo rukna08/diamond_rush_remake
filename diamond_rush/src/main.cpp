@@ -479,7 +479,7 @@ void process_input() {
 }
 
 void draw_text_init() { 
-    font = TTF_OpenFont("data/Roboto-Light.ttf", 50);
+    font = TTF_OpenFont("data/font/consolas_bold.ttf", 20);
 }
 
 void draw_text(std::string text, float x, float y, SDL_Color* color) {
