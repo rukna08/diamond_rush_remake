@@ -52,7 +52,7 @@ std::stack<char> direction_stream;
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
-float camera_speed = 10;
+float camera_speed = 2;
 std::vector<SDL_Texture*> animation_player_idle_list;
 std::vector<SDL_Texture*> animation_player_walk_list;
 std::vector<SDL_Texture*> animation_stone_move_list;
@@ -132,21 +132,23 @@ void draw() {
     play_animation(current_animation);
 
     if (engine_mode) {
-        draw_text("ENGINE MODE", 1000, 0, &color_white);
+        draw_text("(X)    ENGINE MODE", 1000, 0, &color_white);
 
         show_grid(level_grid, renderer);
 
         std::string position = std::to_string((int)player->rect.x) + "," + std::to_string((int)player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
-        
-        draw_text("SAVE: (R)", 1000, 20, &color_white);
-        draw_text("DESTROY: (L)", 1000, 40, &color_white);
-        draw_text("RELOAD: (Y)", 1000, 60, &color_white);
-        draw_text("PLACE ENTITY(Q/E): " + sprite_names[current_level_item_to_be_placed], 1000, 80, &color_white);
+
+        draw_text("(R)    SAVE",         1000, 20,  &color_white);
+        draw_text("(L)    DESTROY",      1000, 40,  &color_white);
+        draw_text("(Y)    RELOAD",       1000, 60,  &color_white);
+        draw_text("(MB1)  PLACE ENTITY", 1000, 80, &color_white);
+        draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], 1000, 100, &color_white);
+        draw_text("(WASD) MOVE CAMERA",  1000, 120, &color_white);
     }
     
     if (!engine_mode) {
-        draw_text("GAME MODE", 1000, 0, &color_white);
+        draw_text("(X)   GAME MODE", 1000, 0, &color_white);
     }
 
 
@@ -485,7 +487,6 @@ void draw_text_init() {
 void draw_text(std::string text, float x, float y, SDL_Color* color) {
     static std::string last_text = "";
     static SDL_Texture* last_text_texture = nullptr;
-
     if (text != last_text) {
         if (last_text_texture) {
             SDL_DestroyTexture(last_text_texture);
@@ -495,7 +496,6 @@ void draw_text(std::string text, float x, float y, SDL_Color* color) {
         SDL_FreeSurface(text_surface);
         last_text = text;
     }
-
     SDL_FRect text_rect = { x, y, 10 * text.length(), 23 };
     SDL_RenderCopyF(renderer, last_text_texture, 0, &text_rect);
 }
