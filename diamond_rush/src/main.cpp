@@ -100,21 +100,14 @@ int main(int argc, char* argv[]) {
 
     // Load the game map.
     reload_map(walls, back_walls, renderer);
-
     create_level_grid_rects(level_grid);
-
     draw_text_init();
-
     init_animation();
-
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     // Game Loop.
     while (is_game_running) {
         draw();
-        draw_walls();
-        draw_back_walls();
-
         process_input();
     }
     
@@ -132,6 +125,9 @@ int animation_index = 0;
 float animation_speed = 300;
 void draw() {
 
+    draw_walls();
+    draw_back_walls();
+
     // Call this only inside !engine_mode.
     play_animation(current_animation);
 
@@ -140,10 +136,10 @@ void draw() {
         show_grid(level_grid, renderer);
         std::string position = std::to_string((int)player->rect.x) + "," + std::to_string((int)player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
-        draw_text("Save Level:     R", 1000, 20, &color_white);
-        draw_text("Destroy Level:  L", 1000, 40, &color_white);
-        draw_text("Reload Level:   Y", 1000, 60, &color_white);
-        draw_text("Placing Sprite: " + sprite_names[current_level_item_to_be_placed], 1000, 80, &color_white);
+        draw_text("Save Level: (R)", 1000, 20, &color_white);
+        draw_text("Destroy Level: (L)", 1000, 40, &color_white);
+        draw_text("Reload Level: (Y)", 1000, 60, &color_white);
+        draw_text("Placing Sprite(Q/E): " + sprite_names[current_level_item_to_be_placed], 1000, 80, &color_white);
     }
     
     if (!engine_mode) {
@@ -271,13 +267,13 @@ void process_input() {
                 if (event.key.keysym.sym == SDLK_l && engine_mode) {
                     destroy_map(walls);
                 }
-                if (event.key.keysym.sym == SDLK_RIGHT && engine_mode) {
+                if (event.key.keysym.sym == SDLK_e && engine_mode) {
                     current_level_item_to_be_placed++;
                     if (current_level_item_to_be_placed == sprite_names.size()) {
                         current_level_item_to_be_placed = 1;
                     }
                 }
-                if (event.key.keysym.sym == SDLK_LEFT && engine_mode) {
+                if (event.key.keysym.sym == SDLK_q && engine_mode) {
                     current_level_item_to_be_placed--;
                     if (current_level_item_to_be_placed == 0) {
                         current_level_item_to_be_placed = sprite_names.size() - 1;
