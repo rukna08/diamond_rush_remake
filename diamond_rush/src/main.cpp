@@ -95,7 +95,7 @@ SDL_Color color_white = { 255, 255, 255, 255 };
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP , &window, &renderer);
+    SDL_CreateWindowAndRenderer(WINDOW_RES_X, WINDOW_RES_Y, SDL_WINDOW_SHOWN | SDL_WINDOW_ALWAYS_ON_TOP, &window, &renderer);
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     player = new Player(renderer, 3, 3);
@@ -138,23 +138,21 @@ void draw() {
     play_animation(current_animation);
 
     if (engine_mode) {
+        show_grid(level_grid, renderer);
+    }
+
+    draw_engine_side_panel();
+    
+    if (engine_mode) {
 
         std::string position = std::to_string((int)player->rect.x) + "," + std::to_string((int)player->rect.y);
         draw_text(position, player->rect.x, player->rect.y, &color_white);
-
-
-        show_grid(level_grid, renderer);
-        
-        draw_engine_side_panel();
-        
 
         draw_entity_below_mouse();
         
     }
     
-    if (!engine_mode) {
-        draw_text("(X)   GAME MODE", 1000, 0, &color_white);
-    }
+
 
 
     SDL_RenderPresent(renderer);
@@ -663,48 +661,60 @@ void draw_entity_below_mouse() {
 // Needs extreme amounts of optimisations like not recreating
 // the side_panel_rect each time every frame.
 void draw_engine_side_panel() {
-
+    
+    
     int starting_x = 1500;
     int starting_y = 0;
-    int width      = WINDOW_RES_X - starting_x;
-    int height     = WINDOW_RES_Y - starting_y;
+    int width = WINDOW_RES_X - starting_x;
+    int height = WINDOW_RES_Y - starting_y;
+
+
+    if (engine_mode) {
+        
+        
     
-    // ---------------------------------------------------------
-        SDL_Rect side_panel_rect = {
-            starting_x, starting_y, 
-            width, height
-        };
+        // ---------------------------------------------------------
+            SDL_Rect side_panel_rect = {
+                starting_x, starting_y, 
+                width, height
+            };
 
 
-        SDL_SetRenderDrawColor(renderer, 23, 29, 27, 255);
-        SDL_RenderFillRect(renderer, &side_panel_rect);
-        SDL_RenderDrawRect(renderer, &side_panel_rect);
-    // ---------------------------------------------------------
+            SDL_SetRenderDrawColor(renderer, 23, 29, 27, 255);
+            SDL_RenderFillRect(renderer, &side_panel_rect);
+            SDL_RenderDrawRect(renderer, &side_panel_rect);
+        // ---------------------------------------------------------
 
 
-    // ---------------------------------------------------------
-        SDL_Rect current_entity_sprite_rect = {
-            starting_x + 70, starting_y + 145,
-            SPRITE_SIZE, SPRITE_SIZE
-        };
+        // ---------------------------------------------------------
+            SDL_Rect current_entity_sprite_rect = {
+                starting_x + 70, starting_y + 145,
+                SPRITE_SIZE, SPRITE_SIZE
+            };
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        //SDL_RenderFillRect(renderer, &current_entity_sprite_rect);
-        SDL_RenderCopy(renderer, level_sprites[current_level_item_to_be_placed], 0, &current_entity_sprite_rect);
-        SDL_RenderDrawRect(renderer, &current_entity_sprite_rect);
-    // ---------------------------------------------------------
-
-
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            //SDL_RenderFillRect(renderer, &current_entity_sprite_rect);
+            SDL_RenderCopy(renderer, level_sprites[current_level_item_to_be_placed], 0, &current_entity_sprite_rect);
+            SDL_RenderDrawRect(renderer, &current_entity_sprite_rect);
+        // ---------------------------------------------------------
 
 
-    // ---------------------------------------------------------
-        draw_text("(X)    ENGINE MODE",                                                     starting_x, 0,   &color_white);
-        draw_text("(R)    SAVE",                                                            starting_x, 20,  &color_white);
-        draw_text("(L)    DESTROY",                                                         starting_x, 40,  &color_white);
-        draw_text("(Y)    RELOAD",                                                          starting_x, 60,  &color_white);
-        draw_text("(WASD) MOVE CAMERA",                                                     starting_x, 80,  &color_white);
-        draw_text("(MB1)  PLACE ENTITY",                                                    starting_x, 100, &color_white);
-        draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], starting_x, 120, &color_white);
-    // ---------------------------------------------------------
 
+
+        // ---------------------------------------------------------
+            draw_text("(X)    ENGINE MODE",                                                     starting_x, 0,   &color_white);
+            draw_text("(R)    SAVE",                                                            starting_x, 20,  &color_white);
+            draw_text("(L)    DESTROY",                                                         starting_x, 40,  &color_white);
+            draw_text("(Y)    RELOAD",                                                          starting_x, 60,  &color_white);
+            draw_text("(WASD) MOVE CAMERA",                                                     starting_x, 80,  &color_white);
+            draw_text("(MB1)  PLACE ENTITY",                                                    starting_x, 100, &color_white);
+            draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], starting_x, 120, &color_white);
+        // ---------------------------------------------------------
+    }
+
+
+
+    if (!engine_mode) {
+        draw_text("(X)   GAME MODE", starting_x, 0, &color_white);
+    }
 }
