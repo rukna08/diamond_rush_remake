@@ -21,7 +21,7 @@ void create_level_grid_rects(std::vector<SDL_FRect*>& level_grid) {
 void remove_wall_pixels(std::vector<Wall>& walls, float x, float y) {
 	auto it = std::remove_if(walls.begin(), walls.end(), [x, y](const Wall& wall) {
 		return wall.rect.x == x && wall.rect.y == y;
-		});
+	});
 
 
 	if (it != walls.end()) {
@@ -30,10 +30,27 @@ void remove_wall_pixels(std::vector<Wall>& walls, float x, float y) {
 }
 
 void place_back_wall(int x, int y, SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls) {
+	// Check for duplicated.
+	for (int i = 0; i < back_walls.size(); i++) {
+		if (back_walls[i].rect.x == x && back_walls[i].rect.y == y) {
+			std::cout << "Entity already exists." << std::endl;
+			return;
+		}
+	}
+
 	back_walls.push_back(Back_Wall(x, y, renderer));
 }
 
 void place_wall(int x, int y, SDL_Renderer* renderer, std::vector<Wall>& walls) {
+	
+	// Check for duplicated.
+	for (int i = 0; i < walls.size(); i++) {
+		if (walls[i].rect.x == x && walls[i].rect.y == y) {
+			std::cout << "Entity already exists." << std::endl;
+			return;
+		}
+	}
+
 	walls.push_back(Wall(x, y, renderer));
 }
 
