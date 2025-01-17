@@ -1,7 +1,7 @@
 #include "map_manager.h"
 
 
-void save_map(std::vector<Wall>& stage_wall, std::vector<Back_Wall>& back_walls, int command) {
+void save_map(std::vector<Wall>& stage_wall, std::vector<Back_Wall>& back_walls, int command) { // What the fuck is this command doing here?
     std::ofstream angkor_level_file(ANGKOR_WAT);
     // [OPTIONAL] Delete everything on file before saving
     //angkor_level_file.open(ANGKOR_WAT, std::ofstream::out | std::ofstream::trunc);
@@ -43,7 +43,11 @@ void reload_map(std::vector<Wall>& walls, std::vector<Back_Wall>& black_walls, S
 }
 
 
-void destroy_map(std::vector<Wall>& stage_wall) {
-    if (stage_wall.size() == 0) return;
-    else stage_wall.clear();
+void destroy_map(std::vector<Wall>& walls, std::vector<Back_Wall>& back_walls) {
+    if (walls.size() == 0) return;
+    else walls.clear();
+
+    if (back_walls.size() == 0) return;
+    else back_walls.clear();
+
 }

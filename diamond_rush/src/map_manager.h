@@ -12,4 +12,4 @@
 
 void save_map(std::vector<Wall>&, std::vector<Back_Wall>&, int );
 void reload_map(std::vector<Wall>&, std::vector<Back_Wall>&, SDL_Renderer*);
-void destroy_map(std::vector<Wall>&);
+void destroy_map(std::vector<Wall>&, std::vector<Back_Wall>&);

@@ -5,3 +5,5 @@
 	Now we can pass the entities list to all the arrays instead
 	of individually doing checks and creating functions of doing
 	basic things for each new entity.
+
+--- Make entity placement draggable.

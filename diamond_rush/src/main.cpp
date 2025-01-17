@@ -268,12 +268,16 @@ void process_input() {
                 if (event.key.keysym.sym == SDLK_x) {
                     engine_mode = !engine_mode;
                     map_reset();
+                    save_map(walls, back_walls, 0);
+                }
+                if (event.key.keysym.sym == SDLK_r && !engine_mode) {
+                    save_map(walls, back_walls, 0);
                 }
                 if (event.key.keysym.sym == SDLK_y && !engine_mode) {
                     reload_map(walls, back_walls, renderer);
                 }
                 if (event.key.keysym.sym == SDLK_l && engine_mode) {
-                    destroy_map(walls);
+                    destroy_map(walls, back_walls);
                 }
                 if (event.key.keysym.sym == SDLK_e && engine_mode) {
                     current_level_item_to_be_placed++;
