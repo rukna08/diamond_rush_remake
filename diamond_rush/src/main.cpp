@@ -35,67 +35,8 @@ enum level_item {
     WALL,
     BACK_WALL
 };
-// Temporarily fixed the matrix size to 50x50.
-void* level_matrix[50][50];
-
-//matrix = {
-//    0x123, 0x, 0x, 0x,
-//    0x, 0x, 0x, 0x
-//}
-//
-//vector* entites [] = { stone_address, back_wall_address, .., .., .., .., .., .. }
-//entity 0x111 -> vector walls []
-//
-//
-//fn(entities):
-//    walls = entities[level_item::WALL]
-//    back_walls = entieis[level_item::BACK_WALL]
-//    for i:
-//        use -> walls[i]
-//        use -> back_walls[i]
-//
-//fn update_matrix(entities):
-//    index
-//    index2
-//    entity
-//    for i, j:
-//        entity = entities[index]
-//        position = entity[index2].pos
-//        matrix[ptm.x][ptm.y] = entity
-//        
-//        /*
-//            ex:
-//            walls[0]
-//            back_walls[1]
-//        */
-//
-//storing entity addresses
-//matrix[][] = {
-//    null, null, null, null, null,
-//    null, null, null, null, null,
-//    null, null, null, null, null,
-//    null, null, null, null, null,
-//    null, null, null, null, null,
-//    null, null, null, null, null,
-//    null, null, null, null, null
-//}
 
 int current_level_item_to_be_placed = level_item::WALL;
-
-// Ex: (1, 3) -> (192, 64)
-SDL_FPoint* matrix_to_pixel(int i, int j) {
-    float x = j * SPRITE_SIZE;
-    float y = i * SPRITE_SIZE;
-    return new SDL_FPoint { x, y };
-}
-
-// Ex: (192, 64) -> (1, 3)
-SDL_Point* pixel_to_matrix(float x, float y) {
-    int i = y / SPRITE_SIZE;
-    int j = x / SPRITE_SIZE;
-    return new SDL_Point{ i, j };
-}
-
 
 
 SDL_Window* window;
@@ -376,7 +317,7 @@ void process_input() {
                             if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
                                 // Wall Placement during Engine Mode.
                                 if (current_level_item_to_be_placed == level_item::WALL) {
-                                    place_wall_pixels(walls, level_grid[i]->x, level_grid[i]->y, renderer);
+                                    place_wall(level_grid[i]->x, level_grid[i]->y, renderer, walls);
                                 }
                                 // Back Wall Placement.
                                 if (current_level_item_to_be_placed == level_item::BACK_WALL) {
@@ -587,10 +528,6 @@ void init_animation() {
     // Player Walk Animation.
     for (int i = 0; i <= 3; i++) {
         animation_player_walk_list.push_back(IMG_LoadTexture(renderer, ("data/animation/player_walk/" + std::to_string(i) + ".png").c_str()));
-    }
-    // Stone Move Animation.    
-    for (int i = 0; i <= 6; i++) {
-        animation_stone_move_list.push_back(IMG_LoadTexture(renderer, ("data/animation/stone_move/" + std::to_string(i) + ".png").c_str()));
     }
 }
 

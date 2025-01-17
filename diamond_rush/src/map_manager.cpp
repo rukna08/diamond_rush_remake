@@ -22,7 +22,7 @@ void save_map(std::vector<Wall>& stage_wall, std::vector<Back_Wall>& back_walls,
 }
 
 
-void reload_map(std::vector<Wall>& stage_wall, std::vector<Back_Wall>& black_walls, SDL_Renderer* renderer) {
+void reload_map(std::vector<Wall>& walls, std::vector<Back_Wall>& black_walls, SDL_Renderer* renderer) {
     std::ifstream angkor_level_file(ANGKOR_WAT);
     std::string line;
     while (std::getline(angkor_level_file, line)) {
@@ -31,7 +31,7 @@ void reload_map(std::vector<Wall>& stage_wall, std::vector<Back_Wall>& black_wal
         int x, y;
         if (stream >> level_item_type >> x >> y) {
             if (level_item_type == "wall") {
-                place_wall_pixels(stage_wall, x, y, renderer);
+                place_wall(x, y, renderer, walls);
             }
 
             if (level_item_type == "back_wall") {

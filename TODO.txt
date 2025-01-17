@@ -1,13 +1,3 @@
---- Perfomance different in different machines. Let us
-fix this issue together brothers and hoes.
-
-
-
-
-
-
-
-
 --- Make a list for holding the lists of game entities.
 
 Ex: entities [] = [ stones, walls, back_walls, diamonds, grasses ]
@@ -15,37 +5,6 @@ Ex: entities [] = [ stones, walls, back_walls, diamonds, grasses ]
 Now we can pass the entities list to all the arrays instead
 of individually doing checks and creating functions of doing
 basic things for each new entity.
-
-
-
-
-
-
---- Create a sprite change mechanism in the engine mode.
-
-There should be an array of sprites which will be accessed using
-the Enum called Game Entity's Values as Indices.
-
-int index = Game_Entity::STONE;
-currently_selected_sprite = sprite_array[index];
-
-We will use <--- & ---> (left and right) arrow keys to increment
-or decrement the index value.
-If the index value gets more than the length of sprite_array
-then we will set it to 0.
-Now, why would we want to link the Enum and the index value?
-
-When in the later development of this particular feature,
-we have a GUI for selecting a particular tile, we will have
-an index number in that GUI element corresponding to the
-Game_Entity Enum. Also, we can directly choose to select any
-sprite using the enum value through code if necessary for debug
-purposes. If this is seen as an unnecessary over-complication
-in the future then we should simply keep an integer index.
-
-
-
-
 
 
 

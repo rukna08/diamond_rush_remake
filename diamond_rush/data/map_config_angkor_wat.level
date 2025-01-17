@@ -41,12 +41,15 @@ back_wall 384 448
 back_wall 448 448
 back_wall 512 448
 back_wall 576 448
-back_wall 640 448
 back_wall 768 128
 back_wall 832 128
 back_wall 832 192
 back_wall 768 192
 back_wall 768 256
+back_wall 704 192
+back_wall 704 256
+back_wall 768 320
+back_wall 768 384
 wall 192 128
 wall 128 128
 wall 128 192
@@ -76,7 +79,6 @@ wall 704 128
 wall 640 128
 wall 576 128
 wall 512 128
-wall 768 320
 wall 832 320
 wall 832 256
 wall 896 256
@@ -86,3 +88,9 @@ wall 896 64
 wall 832 64
 wall 768 64
 wall 704 64
+wall 832 384
+wall 832 448
+wall 832 512
+wall 768 512
+wall 640 448
+wall 768 448
