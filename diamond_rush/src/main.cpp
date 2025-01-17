@@ -22,7 +22,7 @@
 #include "back_wall.h"
 
 // Sprite names for display in the engine mode.
-// This corresponds to the below level_item enum.
+// This corresponds to the below level_item enum and level_sprites.
 std::vector<std::string> sprite_names = {
     "Player",
     "Wall",
@@ -35,6 +35,8 @@ enum level_item {
     WALL,
     BACK_WALL
 };
+
+std::vector<SDL_Texture*> level_sprites;
 
 int current_level_item_to_be_placed = level_item::WALL;
 
@@ -106,6 +108,10 @@ int main(int argc, char* argv[]) {
     init_animation();
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
+    level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_player.png"));
+    level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_wall.png"));
+    level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_back_wall.png"));
+
     // Game Loop.
     while (is_game_running) {
         draw();
@@ -143,13 +149,7 @@ void draw() {
         draw_engine_side_panel();
         
 
-        draw_text("(X)    ENGINE MODE", 1000, 0,    &color_white);
-        draw_text("(R)    SAVE",         1000, 20,  &color_white);
-        draw_text("(L)    DESTROY",      1000, 40,  &color_white);
-        draw_text("(Y)    RELOAD",       1000, 60,  &color_white);
-        draw_text("(MB1)  PLACE ENTITY", 1000, 80,  &color_white);
-        draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], 1000, 100, &color_white);
-        draw_text("(WASD) MOVE CAMERA",  1000, 120, &color_white);
+        
         
     }
     
@@ -642,20 +642,53 @@ void place_stone(float x, float y) {
     stones.push_back(Stone(x, y, "stone", renderer));
 }
 
+
+// Needs extreme amounts of optimisations like not recreating
+// the side_panel_rect each time every frame.
+
 void draw_engine_side_panel() {
 
-    int starting_x = 1000;
+    int starting_x = 900;
     int starting_y = 0;
     int width      = WINDOW_RES_X - starting_x;
     int height     = WINDOW_RES_Y - starting_y;
-        
-    SDL_Rect side_panel_rect = {
-        starting_x, starting_y, width, height
-    };
+    
+    // ---------------------------------------------------------
+        SDL_Rect side_panel_rect = {
+            starting_x, starting_y, 
+            width, height
+        };
 
 
-    SDL_SetRenderDrawColor(renderer, 23, 29, 27, 255);
-    SDL_RenderFillRect(renderer, &side_panel_rect);
-    SDL_RenderDrawRect(renderer, &side_panel_rect);
+        SDL_SetRenderDrawColor(renderer, 23, 29, 27, 255);
+        SDL_RenderFillRect(renderer, &side_panel_rect);
+        SDL_RenderDrawRect(renderer, &side_panel_rect);
+    // ---------------------------------------------------------
+
+
+    // ---------------------------------------------------------
+        SDL_Rect current_entity_sprite_rect = {
+            starting_x + 70, starting_y + 145,
+            SPRITE_SIZE, SPRITE_SIZE
+        };
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        //SDL_RenderFillRect(renderer, &current_entity_sprite_rect);
+        SDL_RenderCopy(renderer, level_sprites[current_level_item_to_be_placed], 0, &current_entity_sprite_rect);
+        SDL_RenderDrawRect(renderer, &current_entity_sprite_rect);
+    // ---------------------------------------------------------
+
+
+
+
+    // ---------------------------------------------------------
+        draw_text("(X)    ENGINE MODE",                                                     starting_x, 0,   &color_white);
+        draw_text("(R)    SAVE",                                                            starting_x, 20,  &color_white);
+        draw_text("(L)    DESTROY",                                                         starting_x, 40,  &color_white);
+        draw_text("(Y)    RELOAD",                                                          starting_x, 60,  &color_white);
+        draw_text("(WASD) MOVE CAMERA",                                                     starting_x, 80,  &color_white);
+        draw_text("(MB1)  PLACE ENTITY",                                                    starting_x, 100, &color_white);
+        draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], starting_x, 120, &color_white);
+    // ---------------------------------------------------------
 
 }
