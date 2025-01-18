@@ -27,29 +27,23 @@ std::vector<std::string> sprite_names = {
     "Wall",
     "Back Wall"
 };
-
 // level_item::PLAYER starts from 0.
 enum level_item {
     PLAYER,
     WALL,
     BACK_WALL
 };
-
 std::vector<SDL_Texture*> level_sprites;
-
 int current_level_item_to_be_placed = level_item::WALL;
-
 
 SDL_Window* window;
 SDL_Renderer* renderer;
 Player* player;
-
 std::vector<Wall> walls;
 std::vector<Stone> stones;
 std::vector<Back_Wall> back_walls;
 std::vector<SDL_FRect*> level_grid;
 std::stack<char> direction_stream;
-
 TTF_Font* font;
 SDL_Surface* text_surface;
 SDL_Texture* text_texture;
@@ -57,14 +51,11 @@ float camera_speed = 2;
 std::vector<SDL_Texture*> animation_player_idle_list;
 std::vector<SDL_Texture*> animation_player_walk_list;
 std::vector<SDL_Texture*> animation_stone_move_list;
- 
 bool is_game_running = true;
-
 const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 char last_key_held = 'w';
 bool is_player_moving = false;
 float change = 0.1f;
-
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
 
@@ -74,7 +65,6 @@ void draw_back_walls();
 void draw_stones();
 void place_stone(float x, float y);
 void process_input();
-
 void draw_text(std::string, float, float, SDL_Color*);
 void draw_text_init();
 void init_animation();
@@ -111,10 +101,25 @@ int main(int argc, char* argv[]) {
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_wall.png"));
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_back_wall.png"));
 
-    // Game Loop.
-    while (is_game_running) {
+    int start_time = SDL_GetTicks();
+    int frame_count = 0;
+    int fps = 0;
+    while (is_game_running) {                   // Game / Application Loop.
+        int current_time = SDL_GetTicks();
+        int elapsed_time = (current_time - start_time) / 1000;
+
+        
         draw();
         process_input();
+        
+
+        frame_count++;
+        if (elapsed_time >= 1.0f) {
+            fps = frame_count / elapsed_time;
+            frame_count = 0;
+            start_time = SDL_GetTicks();
+        }
+        draw_text("FPS: " + std::to_string(fps), 0, 0, &color_white);
     }
     
     // Unload
@@ -248,8 +253,6 @@ void draw_stones() {
         SDL_RenderCopyF(renderer, stones[i].texture, 0, &stones[i].rect);
     }
 }
-
-
 
 void process_input() {
     SDL_Event event;
@@ -405,7 +408,7 @@ void process_input() {
         if (!is_wall_on_right_side() && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) 
         {
-            player->rect.x++;
+            player->rect.x += player->speed;
             last_key_held = 'd';
             is_player_moving = true;
             current_animation = "player_walk_right";
@@ -414,7 +417,7 @@ void process_input() {
         if (!is_wall_on_left_side() && !key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {    
-            player->rect.x--;
+            player->rect.x -= player->speed;
             last_key_held = 'a';
             is_player_moving = true;
             current_animation = "player_walk_left";
@@ -423,7 +426,7 @@ void process_input() {
         if (!is_wall_on_up_side() && key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {
-            player->rect.y--;
+            player->rect.y -= player->speed;
             last_key_held = 'w';
             is_player_moving = true;
         }
@@ -431,16 +434,9 @@ void process_input() {
         if (!is_wall_on_down_side() && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {
-            player->rect.y++;
+            player->rect.y += player->speed;
             last_key_held = 's';
             is_player_moving = true;
-        }
-
-        if (key_state[SDL_SCANCODE_F]) {
-            for (int i = 0; i < stones.size(); i++) {
-                current_animation = "stone_move_right";
-                stones[i].rect.x += 0.1;
-            }
         }
     }
 
@@ -517,7 +513,6 @@ void init_animation() {
         animation_player_walk_list.push_back(IMG_LoadTexture(renderer, ("data/animation/player_walk/" + std::to_string(i) + ".png").c_str()));
     }
 }
-
 
 void remove_walls(float x, float y) {
     auto it = std::remove_if(walls.begin(), walls.end(), [x, y](const Wall& wall) {
@@ -643,7 +638,6 @@ void place_stone(float x, float y) {
     stones.push_back(Stone(x, y, "stone", renderer));
 }
 
-
 void draw_entity_below_mouse() {
     
 
@@ -661,13 +655,12 @@ void draw_entity_below_mouse() {
     SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 255);
 }
 
-
 // Needs extreme amounts of optimisations like not recreating
 // the side_panel_rect each time every frame.
 void draw_engine_side_panel() {
     
     
-    int starting_x = 1500;
+    int starting_x = WINDOW_RES_X - 400;
     int starting_y = 0;
     int width = WINDOW_RES_X - starting_x;
     int height = WINDOW_RES_Y - starting_y;

@@ -12,6 +12,7 @@ class Player {
 public:
     SDL_FRect rect;
     SDL_Texture* texture;
+    float speed;
 
 
     Player(SDL_Renderer*,float,float);
