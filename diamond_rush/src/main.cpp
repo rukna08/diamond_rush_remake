@@ -114,11 +114,12 @@ int main(int argc, char* argv[]) {
         
 
         frame_count++;
-        if (elapsed_time >= 1.0f) {
-            fps = frame_count / elapsed_time;
-            frame_count = 0;
-            start_time = SDL_GetTicks();
+        if (elapsed_time >= 1.0f) {             // if 1 second has elapsed, how many frames have been drawn?
+            fps = frame_count;                  // fps stores the number of frames drawn in the 1 second interval.
+            frame_count = 0;                    // frame_count sets to 9.
+            start_time = SDL_GetTicks();        // we start the start timer again, for comparison with the next frame.
         }
+
         draw_text("FPS: " + std::to_string(fps), 0, 0, &color_white);
     }
     
