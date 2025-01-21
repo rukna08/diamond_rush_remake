@@ -61,6 +61,7 @@ bool engine_mode = false;
 // Side panel starting_x variable.
 int starting_x = WINDOW_RES_X - 400;
 bool is_mouse_held = false;
+bool is_over_side_panel = false;
 
 void draw();
 void draw_walls();
@@ -314,18 +315,21 @@ void process_input() {
                 if (engine_mode) {
                     if (event.button.button == SDL_BUTTON_LEFT) {
 
-                        for (int i = 0; i < level_grid.size(); i++) {
-                            if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
-                                // Wall Placement during Engine Mode.
-                                if (current_level_item_to_be_placed == level_item::WALL) {
-                                    place_wall(level_grid[i]->x, level_grid[i]->y, renderer, walls);
-                                }
-                                // Back Wall Placement.
-                                if (current_level_item_to_be_placed == level_item::BACK_WALL) {
-                                    place_back_wall(level_grid[i]->x, level_grid[i]->y, renderer, back_walls);
+                        if (!is_over_side_panel) {
+                            for (int i = 0; i < level_grid.size(); i++) {
+                                if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
+                                    // Wall Placement during Engine Mode.
+                                    if (current_level_item_to_be_placed == level_item::WALL) {
+                                        place_wall(level_grid[i]->x, level_grid[i]->y, renderer, walls);
+                                    }
+                                    // Back Wall Placement.
+                                    if (current_level_item_to_be_placed == level_item::BACK_WALL) {
+                                        place_back_wall(level_grid[i]->x, level_grid[i]->y, renderer, back_walls);
+                                    }
                                 }
                             }
                         }
+
 
                     }
                     else if (event.button.button == SDL_BUTTON_RIGHT) {
@@ -733,17 +737,26 @@ void draw_engine_side_panel() {
             SDL_Cursor* panel_resize_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
             SDL_Cursor* default_cursor      = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
 
-            int offset = 5;
-            if (mouse_x >= starting_x - offset && mouse_x <= starting_x + offset) {
+            int cursor_change_offset = 5;
+            if (mouse_x >= starting_x - cursor_change_offset && mouse_x <= starting_x + cursor_change_offset) {
                 SDL_SetCursor(panel_resize_cursor);
             } else {
                 SDL_SetCursor(default_cursor);
             }
 
-            if (is_mouse_held) {
-                std::cout << "Mouse held!" << std::endl;
+            int side_panel_motion_offset = 50;
+            if (is_mouse_held && mouse_x >= starting_x - side_panel_motion_offset && mouse_x <= starting_x + side_panel_motion_offset) {
+                
                 starting_x = mouse_x;
             }
+
+            int side_panel_over_offset = 15;
+            if (mouse_x > starting_x - side_panel_over_offset) {
+                is_over_side_panel = true;
+            } else {
+                is_over_side_panel = false;
+            }
+            
 
         // ---------------------------------------------------------
     }
