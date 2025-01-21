@@ -7,7 +7,7 @@
 
 #define SPRITE_SIZE 64
 #define WINDOW_RES_X 1920
-#define WINDOW_RES_Y 1080
+#define WINDOW_RES_Y 900
 #define GRID_MULTIPLIER 3
 
 void create_level_grid_rects(std::vector<SDL_FRect*>&);

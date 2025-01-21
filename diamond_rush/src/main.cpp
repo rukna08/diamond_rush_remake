@@ -59,7 +59,8 @@ float change = 0.1f;
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
 // Side panel starting_x variable.
-int starting_x = 0;
+int starting_x = WINDOW_RES_X - 400;
+bool is_mouse_held = false;
 
 void draw();
 void draw_walls();
@@ -299,7 +300,13 @@ void process_input() {
                 }
             } break;
 
+            case SDL_MOUSEBUTTONUP: {
+                is_mouse_held = false;
+            } break;
+
             case SDL_MOUSEBUTTONDOWN: {
+                is_mouse_held = true;
+
                 float x = event.motion.x;
                 float y = event.motion.y;
                 SDL_FPoint mouse_position = { x, y };
@@ -666,7 +673,7 @@ void draw_entity_below_mouse() {
 void draw_engine_side_panel() {
     
     
-    starting_x = WINDOW_RES_X - 400;
+
     int starting_y = 0;
     int width = WINDOW_RES_X - starting_x;
     int height = WINDOW_RES_Y - starting_y;
@@ -731,6 +738,11 @@ void draw_engine_side_panel() {
                 SDL_SetCursor(panel_resize_cursor);
             } else {
                 SDL_SetCursor(default_cursor);
+            }
+
+            if (is_mouse_held) {
+                std::cout << "Mouse held!" << std::endl;
+                starting_x = mouse_x;
             }
 
         // ---------------------------------------------------------
