@@ -58,6 +58,8 @@ bool is_player_moving = false;
 float change = 0.1f;
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
+// Side panel starting_x variable.
+int starting_x = 0;
 
 void draw();
 void draw_walls();
@@ -641,19 +643,22 @@ void place_stone(float x, float y) {
 
 void draw_entity_below_mouse() {
     
-
     int mouse_x;
     int mouse_y;
 
     SDL_GetMouseState(&mouse_x, &mouse_y);
-
-    SDL_Rect rect_below_mouse = { mouse_x - (SPRITE_SIZE / 2), mouse_y - (SPRITE_SIZE / 2), SPRITE_SIZE, SPRITE_SIZE };
-
-    // Set hte transparency value to some number between 0 and 255.
-    SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 100);
-    SDL_RenderCopy(renderer, level_sprites[current_level_item_to_be_placed], 0, &rect_below_mouse);
-    // Reset the transparency value of the sprite.
-    SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 255);
+    
+    // There is another scoped offset variable doing the same thing in draw_engine_side_panel() function.
+    // So we need to change both of them.
+    int offset = 5;
+    if (mouse_x < starting_x - offset) {
+        SDL_Rect rect_below_mouse = { mouse_x - (SPRITE_SIZE / 2), mouse_y - (SPRITE_SIZE / 2), SPRITE_SIZE, SPRITE_SIZE };
+        // Set hte transparency value to some number between 0 and 255.
+        SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 100);
+        SDL_RenderCopy(renderer, level_sprites[current_level_item_to_be_placed], 0, &rect_below_mouse);
+        // Reset the transparency value of the sprite.
+        SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 255);
+    }
 }
 
 // Needs extreme amounts of optimisations like not recreating
@@ -661,7 +666,7 @@ void draw_entity_below_mouse() {
 void draw_engine_side_panel() {
     
     
-    int starting_x = WINDOW_RES_X - 400;
+    starting_x = WINDOW_RES_X - 400;
     int starting_y = 0;
     int width = WINDOW_RES_X - starting_x;
     int height = WINDOW_RES_Y - starting_y;
@@ -708,6 +713,26 @@ void draw_engine_side_panel() {
             draw_text("(MB1)  PLACE ENTITY",                                                    starting_x, 100, &color_white);
             draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], starting_x, 120, &color_white);
             draw_text(ANGKOR_WAT, starting_x, 220, &color_white);
+        // ---------------------------------------------------------
+
+
+        // ---------------------------------------------------------
+            
+            int mouse_x;
+            int mouse_y;
+
+            SDL_GetMouseState(&mouse_x, &mouse_y);
+            
+            SDL_Cursor* panel_resize_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
+            SDL_Cursor* default_cursor      = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+
+            int offset = 5;
+            if (mouse_x >= starting_x - offset && mouse_x <= starting_x + offset) {
+                SDL_SetCursor(panel_resize_cursor);
+            } else {
+                SDL_SetCursor(default_cursor);
+            }
+
         // ---------------------------------------------------------
     }
 
