@@ -707,6 +707,7 @@ void draw_engine_side_panel() {
             draw_text("(WASD) MOVE CAMERA",                                                     starting_x, 80,  &color_white);
             draw_text("(MB1)  PLACE ENTITY",                                                    starting_x, 100, &color_white);
             draw_text("(Q/E)  SELECT ENTITY: " + sprite_names[current_level_item_to_be_placed], starting_x, 120, &color_white);
+            draw_text(ANGKOR_WAT, starting_x, 220, &color_white);
         // ---------------------------------------------------------
     }
 
