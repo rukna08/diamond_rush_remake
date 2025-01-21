@@ -6,7 +6,7 @@
 #include <iostream>
 
 #define SPRITE_SIZE 64
-#define WINDOW_RES_X 1920
+#define WINDOW_RES_X 1800
 #define WINDOW_RES_Y 900
 #define GRID_MULTIPLIER 3
 

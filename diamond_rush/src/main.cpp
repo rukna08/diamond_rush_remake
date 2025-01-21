@@ -55,7 +55,6 @@ bool is_game_running = true;
 const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 char last_key_held = 'w';
 bool is_player_moving = false;
-float change = 0.1f;
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
 // Side panel starting_x variable.
@@ -461,7 +460,7 @@ void process_input() {
                     is_player_moving = false;
                 }
                 if ((int)player->rect.y % 64 != 0) {
-                    player->rect.y -= change;
+                    player->rect.y -= player->speed;
                 }
             } break;
 
@@ -471,7 +470,7 @@ void process_input() {
                     current_animation = "player_idle_left";
                 }
                 if ((int)player->rect.x % 64 != 0) {
-                    player->rect.x -= change;
+                    player->rect.x -= player->speed;
                 }
             } break;
 
@@ -480,7 +479,7 @@ void process_input() {
                     is_player_moving = false;
                 }
                 if ((int)player->rect.y % 64 != 0) {
-                    player->rect.y += change;
+                    player->rect.y += player->speed;
                 }
             } break;
 
@@ -490,7 +489,7 @@ void process_input() {
                     current_animation = "player_idle_right";
                 }
                 if ((int)player->rect.x % 64 != 0) {
-                    player->rect.x += change;
+                    player->rect.x += player->speed;
                 }
             } break;
         }
