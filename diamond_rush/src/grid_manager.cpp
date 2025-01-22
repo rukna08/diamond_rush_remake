@@ -29,28 +29,32 @@ void remove_wall_pixels(std::vector<Wall>& walls, float x, float y) {
 	}
 }
 
-void place_back_wall(int x, int y, SDL_Renderer* renderer, std::vector<Back_Wall>& back_walls) {
-	// Check for duplicated.
-	for (int i = 0; i < back_walls.size(); i++) {
-		if (back_walls[i].rect.x == x && back_walls[i].rect.y == y) {
-			std::cout << "Entity already exists." << std::endl;
-			return;
-		}
-	}
-
-	back_walls.push_back(Back_Wall(x, y, renderer));
-}
-
-void place_wall(int x, int y, SDL_Renderer* renderer, std::vector<Wall>& walls) {
+// Maybe use the level_items enum later.
+void place_entity(float x, float y, const std::string& type, std::vector<Entity*>& entities, SDL_Renderer* renderer) {
 	
-	// Check for duplicated.
-	for (int i = 0; i < walls.size(); i++) {
-		if (walls[i].rect.x == x && walls[i].rect.y == y) {
-			std::cout << "Entity already exists." << std::endl;
-			return;
+	if (type == "wall") {
+		
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
+				std::cout << "Entity already exists." << std::endl;
+				return;
+			}
 		}
+
+		entities.push_back(new Wall(x, y, renderer));
+		std::cout << type << " placed." << std::endl;
 	}
 
-	walls.push_back(Wall(x, y, renderer));
-}
+	if (type == "back_wall") {
 
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
+				std::cout << "Entity already exists." << std::endl;
+				return;
+			}
+		}
+
+		entities.push_back(new Back_Wall(x, y, renderer));
+	}
+
+}

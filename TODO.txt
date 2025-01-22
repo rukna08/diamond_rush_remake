@@ -6,4 +6,5 @@
 	of individually doing checks and creating functions of doing
 	basic things for each new entity.
 
---- Make entity placement draggable.
+--- Make Serialisation System for Engine Stuff.
+	Ex: Save the starting_x for side panel of the engine.
