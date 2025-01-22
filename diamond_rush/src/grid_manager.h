@@ -12,5 +12,5 @@
 
 void create_level_grid_rects(std::vector<SDL_FRect*>&);
 void show_grid(std::vector<SDL_FRect*>&, SDL_Renderer*);
-void remove_wall_pixels(std::vector<Wall>& , float, float);
 void place_entity(float x, float y, const std::string& type, std::vector<Entity*>& entities, SDL_Renderer* renderer);
+void remove_entity(float x, float y, std::vector<Entity*>& entities);

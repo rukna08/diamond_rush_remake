@@ -329,28 +329,15 @@ void process_input() {
                                 }
                             }
                         }
-                    }
-                    else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    } else if (event.button.button == SDL_BUTTON_RIGHT) {
                         for (int i = 0; i < level_grid.size(); i++) {
                             if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
-                                // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                                // THIS NEEDS TO BE IMPLEMENTED ASAP!!
-                                //delete that specific wall of location x,y
-                                /*if (current_level_item_to_be_placed == level_item::WALL) {
-                                    remove_walls(level_grid[i]->x, level_grid[i]->y);
-                                }
-                                if (current_level_item_to_be_placed == level_item::BACK_WALL) {
-                                    remove_back_walls(level_grid[i]->x, level_grid[i]->y);
-                                }*/
-
-                                // Remove it from the entity too.
-                                // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                                remove_entity(level_grid[i]->x, level_grid[i]->y, entities);
                             }
                         }
                     }
 
                 }
-
             } break;
         }
     }

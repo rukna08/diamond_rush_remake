@@ -18,14 +18,20 @@ void create_level_grid_rects(std::vector<SDL_FRect*>& level_grid) {
 }
 
 
-void remove_wall_pixels(std::vector<Wall>& walls, float x, float y) {
-	auto it = std::remove_if(walls.begin(), walls.end(), [x, y](const Wall& wall) {
-		return wall.rect.x == x && wall.rect.y == y;
-	});
+void remove_entity(float x, float y, std::vector<Entity*>& entities) {
 
+	std::cout << "Layer 1." << std::endl;
+	
+	for (int i = 0; i < entities.size(); i++) {
+		
+		std::cout << "Layer 2." << std::endl;
 
-	if (it != walls.end()) {
-		walls.erase(it, walls.end());
+		if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
+			entities.erase(entities.begin() + i);
+			std::cout << "Layer 3." << std::endl;
+			std::cout << "Removed entity at (" << x << "," << y << ")" << std::endl;
+		}
+
 	}
 }
 
