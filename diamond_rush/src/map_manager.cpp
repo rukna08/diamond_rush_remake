@@ -10,10 +10,12 @@ void save_map(std::vector<Entity*>& entities, int command) { // What the fuck is
         angkor_level_file << entities[i]->type << " " << entities[i]->rect.x << " " << entities[i]->rect.y << "\n";
     }
     angkor_level_file.close();
+
+    std::cout << "Map saved." << std::endl;
 }
 
 
-void reload_map(std::vector<Entity*> entities, SDL_Renderer* renderer) {
+void reload_map(std::vector<Entity*>& entities, SDL_Renderer* renderer) {
     std::ifstream angkor_level_file(ANGKOR_WAT);
     std::string line;
     while (std::getline(angkor_level_file, line)) {
