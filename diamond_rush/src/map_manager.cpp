@@ -3,8 +3,6 @@
 
 void save_map(std::vector<Entity*>& entities, int command) { // What the fuck is this command doing here?
     std::ofstream angkor_level_file(ANGKOR_WAT);
-    // [OPTIONAL] Delete everything on file before saving
-    //angkor_level_file.open(ANGKOR_WAT, std::ofstream::out | std::ofstream::trunc);
     
     for (int i = 0; i < entities.size(); i++) {
         angkor_level_file << entities[i]->type << " " << entities[i]->rect.x << " " << entities[i]->rect.y << "\n";

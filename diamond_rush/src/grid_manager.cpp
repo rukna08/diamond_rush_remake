@@ -19,47 +19,30 @@ void create_level_grid_rects(std::vector<SDL_FRect*>& level_grid) {
 
 
 void remove_entity(float x, float y, std::vector<Entity*>& entities) {
-
-	std::cout << "Layer 1." << std::endl;
-	
 	for (int i = 0; i < entities.size(); i++) {
-		
-		std::cout << "Layer 2." << std::endl;
-
 		if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
 			entities.erase(entities.begin() + i);
-			std::cout << "Layer 3." << std::endl;
-			std::cout << "Removed entity at (" << x << "," << y << ")" << std::endl;
 		}
-
 	}
 }
 
-// Maybe use the level_items enum later.
-void place_entity(float x, float y, const std::string& type, std::vector<Entity*>& entities, SDL_Renderer* renderer) {
-	
+void place_entity(float x, float y, const std::string& type, std::vector<Entity*>& entities, SDL_Renderer* renderer) {	
 	if (type == "wall") {
-		
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
 				std::cout << "Entity already exists." << std::endl;
 				return;
 			}
 		}
-
 		entities.push_back(new Wall(x, y, renderer));
-		std::cout << type << " placed." << std::endl;
 	}
-
 	if (type == "back_wall") {
-
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
 				std::cout << "Entity already exists." << std::endl;
 				return;
 			}
 		}
-
 		entities.push_back(new Back_Wall(x, y, renderer));
 	}
 

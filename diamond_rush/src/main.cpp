@@ -255,7 +255,39 @@ void draw_entities() {
     }
 }
 
+
 void process_input() {
+
+    int mouse_x, mouse_y;
+    int button_state = SDL_GetMouseState(&mouse_x, &mouse_y);
+    SDL_FPoint mouse_position = SDL_FPoint{ (float)mouse_x, (float)mouse_y };
+
+    if (engine_mode) {
+        if (!is_over_side_panel && is_mouse_held) {
+            if (button_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
+                        
+                        if (current_level_item_to_be_placed == level_item::WALL) {
+                            place_entity(level_grid[i]->x, level_grid[i]->y, "wall", entities, renderer);
+                        }
+                        
+                        if (current_level_item_to_be_placed == level_item::BACK_WALL) {
+                            place_entity(level_grid[i]->x, level_grid[i]->y, "back_wall", entities, renderer);
+                        }
+                    }
+                }
+            }
+            else if (button_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+                for (int i = 0; i < level_grid.size(); i++) {
+                    if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
+                        remove_entity(level_grid[i]->x, level_grid[i]->y, entities);
+                    }
+                }
+            }
+        }
+    }
+
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -307,37 +339,6 @@ void process_input() {
 
             case SDL_MOUSEBUTTONDOWN: {
                 is_mouse_held = true;
-
-                float x = event.motion.x;
-                float y = event.motion.y;
-                SDL_FPoint mouse_position = { x, y };
-
-                if (engine_mode) {
-                    if (event.button.button == SDL_BUTTON_LEFT) {
-
-                        if (!is_over_side_panel) {
-                            for (int i = 0; i < level_grid.size(); i++) {
-                                if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
-                                    // Wall Placement during Engine Mode.
-                                    if (current_level_item_to_be_placed == level_item::WALL) {
-                                        place_entity(level_grid[i]->x, level_grid[i]->y, "wall", entities, renderer);
-                                    }
-                                    // Back Wall Placement.
-                                    if (current_level_item_to_be_placed == level_item::BACK_WALL) {
-                                        place_entity(level_grid[i]->x, level_grid[i]->y, "back_wall", entities, renderer);
-                                    }
-                                }
-                            }
-                        }
-                    } else if (event.button.button == SDL_BUTTON_RIGHT) {
-                        for (int i = 0; i < level_grid.size(); i++) {
-                            if (SDL_PointInFRect(&mouse_position, level_grid[i])) {
-                                remove_entity(level_grid[i]->x, level_grid[i]->y, entities);
-                            }
-                        }
-                    }
-
-                }
             } break;
         }
     }
@@ -748,6 +749,7 @@ void draw_engine_side_panel() {
             
 
         // ---------------------------------------------------------
+
     }
 
 
