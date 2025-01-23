@@ -161,7 +161,7 @@ void update() {
 
 std::string current_animation = "player_idle_right";
 int animation_index = 0;
-float animation_speed = 250;
+float animation_speed = 150;
 void draw() {
 
     draw_entities();
