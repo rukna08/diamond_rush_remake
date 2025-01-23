@@ -63,19 +63,17 @@ std::vector<Entity*> entities;
 
 void draw();
 void process_input();
-void draw_text(std::string, float, float, SDL_Color*);
+void draw_text(std::string text, float x, float y, SDL_Color* color);
 void draw_text_init();
 void init_animation();
 void play_animation(const std::string&);
 void update_animation();
 void map_reset();
-bool is_wall_on_right_side();
-bool is_wall_on_left_side();
-bool is_wall_on_up_side();
-bool is_wall_on_down_side();
 void draw_engine_side_panel();
 void draw_entity_below_mouse();
 void draw_entities();
+bool is_collision_with_wall_on(const std::string& that_side, Entity& for_entity);
+bool is_player_colliding_with_wall_on(const std::string& that_side);
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -144,13 +142,8 @@ int main(int argc, char* argv[]) {
 
 std::string current_animation = "player_idle_right";
 int animation_index = 0;
-float animation_speed = 300;
+float animation_speed = 250;
 void draw() {
-
-    //draw_walls();
-    //draw_back_walls();
-
-    
 
     draw_entities();
 
@@ -395,7 +388,7 @@ void process_input() {
     }
 
     else if (!is_player_moving && !engine_mode) {
-        if (!is_wall_on_right_side() && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
+        if (!is_player_colliding_with_wall_on("right") && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) 
         {
             player->rect.x += player->speed;
@@ -404,7 +397,7 @@ void process_input() {
             current_animation = "player_walk_right";
         }
 
-        if (!is_wall_on_left_side() && !key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
+        if (!is_player_colliding_with_wall_on("left") && !key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {    
             player->rect.x -= player->speed;
@@ -413,7 +406,7 @@ void process_input() {
             current_animation = "player_walk_left";
         }
 
-        if (!is_wall_on_up_side() && key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
+        if (!is_player_colliding_with_wall_on("up") && key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {
             player->rect.y -= player->speed;
@@ -421,7 +414,7 @@ void process_input() {
             is_player_moving = true;
         }
 
-        if (!is_wall_on_down_side() && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
+        if (!is_player_colliding_with_wall_on("down") && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {
             player->rect.y += player->speed;
@@ -552,49 +545,58 @@ void map_reset() {
     }
 }
 
-// Collison detection between player and wall.
-bool is_wall_on_right_side() {
-    SDL_FPoint right_tile_point = { player->rect.x + (SPRITE_SIZE), player->rect.y };
+bool is_collision_with_wall_on(const std::string& that_side, Entity& for_entity) {
+
+    SDL_FPoint tile;
+    if (that_side == "right") {
+        tile = { for_entity.rect.x + SPRITE_SIZE, for_entity.rect.y };
+    }
+    if (that_side == "left") {
+        tile = { for_entity.rect.x - 1, for_entity.rect.y };
+    }
+    if (that_side == "up") {
+        tile = { for_entity.rect.x, for_entity.rect.y - 1 };
+    }
+    if (that_side == "down") {
+        tile = { for_entity.rect.x, for_entity.rect.y + SPRITE_SIZE };
+    }
+
     for (int i = 0; i < entities.size(); i++) {
         if (entities[i]->type == "wall") {
-            if (SDL_PointInFRect(&right_tile_point, &entities[i]->rect)) {
+            if (SDL_PointInFRect(&tile, &entities[i]->rect)) {
                 return true;
             }
         }
     }
+
     return false;
 }
-bool is_wall_on_left_side() {
-    SDL_FPoint left_tile_point = { player->rect.x - 1, player->rect.y };
+
+bool is_player_colliding_with_wall_on(const std::string& that_side) {
+
+    SDL_FPoint tile;
+    if (that_side == "right") {
+        tile = { player->rect.x + SPRITE_SIZE, player->rect.y };
+    }
+    if (that_side == "left") {
+        tile = { player->rect.x - 1, player->rect.y };
+    }
+    if (that_side == "up") {
+        tile = { player->rect.x, player->rect.y - 1 };
+    }
+    if (that_side == "down") {
+        tile = { player->rect.x, player->rect.y + SPRITE_SIZE };
+    }
+
     for (int i = 0; i < entities.size(); i++) {
         if (entities[i]->type == "wall") {
-            if (SDL_PointInFRect(&left_tile_point, &entities[i]->rect)) {
+            if (SDL_PointInFRect(&tile, &entities[i]->rect)) {
+                std::cout << "Player colliding in " << that_side << " side." << std::endl;
                 return true;
             }
         }
     }
-    return false;
-}
-bool is_wall_on_up_side() {
-    SDL_FPoint up_tile_point = { player->rect.x, player->rect.y - 1 };
-    for (int i = 0; i < entities.size(); i++) {
-        if (entities[i]->type == "wall") {
-            if (SDL_PointInFRect(&up_tile_point, &entities[i]->rect)) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-bool is_wall_on_down_side() {
-    SDL_FPoint down_tile_point = { player->rect.x, player->rect.y + SPRITE_SIZE };
-    for (int i = 0; i < entities.size(); i++) {
-        if (entities[i]->type == "wall") {
-            if (SDL_PointInFRect(&down_tile_point, &entities[i]->rect)) {
-                return true;
-            }
-        }
-    }
+
     return false;
 }
 
