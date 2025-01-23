@@ -13,3 +13,12 @@ Stone::Stone(float x, float y, SDL_Renderer* renderer) {
 
 	type = "stone";
 }
+
+void Stone::fall(bool is_colliding) {
+	
+	if (!is_colliding) {
+		rect.y++;
+	}
+
+
+}

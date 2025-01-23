@@ -74,8 +74,9 @@ void map_reset();
 void draw_engine_side_panel();
 void draw_entity_below_mouse();
 void draw_entities();
-bool is_collision_with_wall_on(const std::string& that_side, Entity& for_entity);
+bool is_collision_with_wall_on(const std::string& that_side, Entity* for_entity);
 bool is_player_colliding_with_wall_on(const std::string& that_side);
+void update();
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -120,8 +121,10 @@ int main(int argc, char* argv[]) {
         int elapsed_time = (current_time - start_time) / 1000;
 
         
-        draw();
+        
         process_input();
+        update();
+        draw();
         
 
         frame_count++;
@@ -141,6 +144,19 @@ int main(int argc, char* argv[]) {
     SDL_Quit();
 
     return 0;
+}
+
+void update() {
+
+    if (!engine_mode) {
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities[i]->type == "stone") {
+                entities[i]->fall(is_collision_with_wall_on("down", entities[i]));
+            }
+        }
+    }
+    
+
 }
 
 std::string current_animation = "player_idle_right";
@@ -552,20 +568,20 @@ void map_reset() {
     }
 }
 
-bool is_collision_with_wall_on(const std::string& that_side, Entity& for_entity) {
+bool is_collision_with_wall_on(const std::string& that_side, Entity* for_entity) {
 
     SDL_FPoint tile;
     if (that_side == "right") {
-        tile = { for_entity.rect.x + SPRITE_SIZE, for_entity.rect.y };
+        tile = { for_entity->rect.x + SPRITE_SIZE, for_entity->rect.y };
     }
     if (that_side == "left") {
-        tile = { for_entity.rect.x - 1, for_entity.rect.y };
+        tile = { for_entity->rect.x - 1, for_entity->rect.y };
     }
     if (that_side == "up") {
-        tile = { for_entity.rect.x, for_entity.rect.y - 1 };
+        tile = { for_entity->rect.x, for_entity->rect.y - 1 };
     }
     if (that_side == "down") {
-        tile = { for_entity.rect.x, for_entity.rect.y + SPRITE_SIZE };
+        tile = { for_entity->rect.x, for_entity->rect.y + SPRITE_SIZE };
     }
 
     for (int i = 0; i < entities.size(); i++) {
@@ -598,7 +614,6 @@ bool is_player_colliding_with_wall_on(const std::string& that_side) {
     for (int i = 0; i < entities.size(); i++) {
         if (entities[i]->type == "wall") {
             if (SDL_PointInFRect(&tile, &entities[i]->rect)) {
-                std::cout << "Player colliding in " << that_side << " side." << std::endl;
                 return true;
             }
         }
