@@ -12,12 +12,14 @@ Stone::Stone(float x, float y, SDL_Renderer* renderer) {
 	texture = IMG_LoadTexture(renderer, "data/sprite_stone.png");
 
 	type = "stone";
+
+	fall_speed = 0.4;
 }
 
 void Stone::fall(bool is_colliding) {
 	
 	if (!is_colliding) {
-		rect.y++;
+		rect.y += fall_speed;
 	}
 
 

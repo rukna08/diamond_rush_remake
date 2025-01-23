@@ -310,7 +310,7 @@ void process_input() {
             case SDL_QUIT: {
                 is_game_running = false;
                 map_reset();
-                save_map(entities, 0);
+                //save_map(entities, 0);
             } break;
 
             case SDL_KEYDOWN: {
