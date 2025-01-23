@@ -30,7 +30,6 @@ void place_entity(float x, float y, const std::string& type, std::vector<Entity*
 	if (type == "wall") {
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
-				std::cout << "Entity already exists." << std::endl;
 				return;
 			}
 		}
@@ -39,7 +38,6 @@ void place_entity(float x, float y, const std::string& type, std::vector<Entity*
 	if (type == "back_wall") {
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
-				std::cout << "Entity already exists." << std::endl;
 				return;
 			}
 		}

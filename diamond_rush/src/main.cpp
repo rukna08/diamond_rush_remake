@@ -306,18 +306,15 @@ void process_input() {
                     map_reset();
                     save_map(entities, 0);
                 }
-                if (event.key.keysym.sym == SDLK_r && !engine_mode) {
+                if (event.key.keysym.sym == SDLK_r && engine_mode) {
+                    map_reset();
                     save_map(entities, 0);
                 }
-                if (event.key.keysym.sym == SDLK_y && !engine_mode) {
+                if (event.key.keysym.sym == SDLK_y && engine_mode) {
                     reload_map(entities, renderer);
                 }
                 if (event.key.keysym.sym == SDLK_l && engine_mode) {
-                    
-                    // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                    // THIS NEEDS TO BE IMPLEMENTED ASAP!!
-                    //destroy_map(walls, back_walls);
-                    // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    destroy_map(entities);
                 }
                 if (event.key.keysym.sym == SDLK_e && engine_mode) {
                     current_level_item_to_be_placed++;
@@ -507,44 +504,6 @@ void init_animation() {
     }
 }
 
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// 
-// 
-// THIS NEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEDS TO BE IMPLEMENTED ASAP!!!!
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-
-//void remove_walls(float x, float y) {
-//    auto it = std::remove_if(walls.begin(), walls.end(), [x, y](const Wall& wall) {
-//        return wall.rect.x == x && wall.rect.y == y;
-//    });
-//    if (it != walls.end()) {
-//        walls.erase(it, walls.end());
-//    }
-//}
-//
-//void remove_back_walls(int x, int y) {
-//    auto it = std::remove_if(back_walls.begin(), back_walls.end(), [x, y](const Back_Wall& back_wall) {
-//        return back_wall.rect.x == x && back_wall.rect.y == y;
-//    });
-//
-//    if (it != back_walls.end()) {
-//        back_walls.erase(it, back_walls.end());
-//    }
-//}
-
-
-
 void map_reset() {
     if (direction_stream.empty() == true) {
         return;
@@ -557,9 +516,6 @@ void map_reset() {
             for (int i = 0; i < level_grid.size(); i++) {
                 level_grid[i]->y -= camera_speed;
             }
-            // We need to do this for all the entities automatically.
-            // Another reason for creating a list of all entities.
-            
             for (int i = 0; i < entities.size(); i++) {
                 entities[i]->rect.y -= camera_speed;
             }
@@ -654,10 +610,10 @@ void draw_entity_below_mouse() {
     int offset = 5;
     if (mouse_x < starting_x - offset) {
         SDL_Rect rect_below_mouse = { mouse_x - (SPRITE_SIZE / 2), mouse_y - (SPRITE_SIZE / 2), SPRITE_SIZE, SPRITE_SIZE };
-        // Set hte transparency value to some number between 0 and 255.
+        // Set transparency value to some number between 0 and 255.
         SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 100);
         SDL_RenderCopy(renderer, level_sprites[current_level_item_to_be_placed], 0, &rect_below_mouse);
-        // Reset the transparency value of the sprite.
+        // Reset transparency value of the sprite.
         SDL_SetTextureAlphaMod(level_sprites[current_level_item_to_be_placed], 255);
     }
 }

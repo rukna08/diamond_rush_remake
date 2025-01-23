@@ -29,6 +29,10 @@ void reload_map(std::vector<Entity*>& entities, SDL_Renderer* renderer) {
 
 
 void destroy_map(std::vector<Entity*>& entities) {
-    if (entities.size() == 0) return;
-    else entities.clear();
+    if (entities.size() == 0) {
+        return;
+    } else {
+        entities.clear();
+        std::cout << "Destroyed map!" << std::endl;
+    }
 }

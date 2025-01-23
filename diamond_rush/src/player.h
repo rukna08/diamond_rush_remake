@@ -4,7 +4,6 @@
 #include <SDL_image.h>
 #include <string>
 #include <vector>
-#include "wall.h"
 
 #define SPRITE_SIZE 64
 

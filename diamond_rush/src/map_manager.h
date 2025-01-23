@@ -12,4 +12,4 @@
 
 void save_map(std::vector<Entity*>& entities, int command);
 void reload_map(std::vector<Entity*>& entities, SDL_Renderer* renderer);
-void destroy_map(std::vector<Wall>&, std::vector<Back_Wall>&);
+void destroy_map(std::vector<Entity*>& entities);
