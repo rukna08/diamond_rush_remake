@@ -29,7 +29,7 @@ void remove_entity(float x, float y, std::vector<Entity*>& entities) {
 void place_entity(float x, float y, const std::string& type, std::vector<Entity*>& entities, SDL_Renderer* renderer) {	
 	if (type == "wall") {
 		for (int i = 0; i < entities.size(); i++) {
-			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
+			if (entities[i]->type == "wall" && entities[i]->rect.x == x && entities[i]->rect.y == y) {
 				return;
 			}
 		}
@@ -37,11 +37,19 @@ void place_entity(float x, float y, const std::string& type, std::vector<Entity*
 	}
 	if (type == "back_wall") {
 		for (int i = 0; i < entities.size(); i++) {
-			if (entities[i]->rect.x == x && entities[i]->rect.y == y) {
+			if (entities[i]->type == "back_wall" && entities[i]->rect.x == x && entities[i]->rect.y == y) {
 				return;
 			}
 		}
 		entities.push_back(new Back_Wall(x, y, renderer));
+	}
+	if (type == "stone") {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities[i]->type == "stone" && entities[i]->rect.x == x && entities[i]->rect.y == y) {
+				return;
+			}
+		}
+		entities.push_back(new Stone(x, y, renderer));
 	}
 
 }

@@ -26,13 +26,15 @@
 std::vector<std::string> sprite_names = {
     "Player",
     "Wall",
-    "Back Wall"
+    "Back Wall",
+    "Stone"
 };
 // level_item::PLAYER starts from 0.
 enum level_item {
     PLAYER,
     WALL,
-    BACK_WALL
+    BACK_WALL,
+    STONE
 };
 std::vector<SDL_Texture*> level_sprites;
 int current_level_item_to_be_placed = level_item::WALL;
@@ -108,6 +110,7 @@ int main(int argc, char* argv[]) {
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_player.png"));
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_wall.png"));
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_back_wall.png"));
+    level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_stone.png"));
 
     int start_time = SDL_GetTicks();
     int frame_count = 0;
@@ -267,6 +270,10 @@ void process_input() {
                         
                         if (current_level_item_to_be_placed == level_item::BACK_WALL) {
                             place_entity(level_grid[i]->x, level_grid[i]->y, "back_wall", entities, renderer);
+                        }
+
+                        if (current_level_item_to_be_placed == level_item::STONE) {
+                            place_entity(level_grid[i]->x, level_grid[i]->y, "stone", entities, renderer);
                         }
                     }
                 }

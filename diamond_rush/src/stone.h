@@ -1,17 +1,12 @@
 #pragma once
 
-#include "SDL.h"
-#include <SDL_image.h>
-#include <string>
 
-#define SPRITE_SIZE 64
+#include "entity.h"
 
-class Stone {
+
+class Stone : public Entity {
     public:
-        SDL_FRect rect;
-        SDL_Texture* texture;
-        std::string object_name;
-        
-        Stone(float x, float y, std::string name, SDL_Renderer* renderer);
-};
+        Stone(float x, float y, SDL_Renderer* renderer);
 
+        
+};

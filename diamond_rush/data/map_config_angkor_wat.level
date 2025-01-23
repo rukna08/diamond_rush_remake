@@ -192,9 +192,7 @@ back_wall 1024 320
 back_wall 1088 320
 back_wall 1088 256
 back_wall 1152 256
-back_wall 1088 192
 back_wall 1024 192
-back_wall 960 192
 back_wall 896 192
 back_wall 832 192
 back_wall 832 256
@@ -334,3 +332,6 @@ back_wall 3968 384
 back_wall 4032 448
 back_wall 3904 256
 back_wall 3904 192
+stone 1024 192
+back_wall 960 192
+back_wall 1088 192
