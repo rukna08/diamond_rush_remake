@@ -76,6 +76,7 @@ void draw_entity_below_mouse();
 void draw_entities();
 bool is_collision_with_wall_on(const std::string& that_side, Entity* for_entity);
 bool is_player_colliding_with_wall_on(const std::string& that_side);
+bool player_has_collided(Entity* other, const std::string& direction);
 void update();
 
 
@@ -148,10 +149,22 @@ int main(int argc, char* argv[]) {
 
 void update() {
 
+    // 0 is NULL here.
+    const Uint8* keyStates = SDL_GetKeyboardState(0);
+    // if (keyStates[SDL_SCANCODE_W])
+
     if (!engine_mode) {
         for (int i = 0; i < entities.size(); i++) {
             if (entities[i]->type == "stone") {
                 entities[i]->fall(is_collision_with_wall_on("down", entities[i]));
+            }
+
+            if (player_has_collided(entities[i], "right")) {
+                std::cout << "Player just collided with a stone." << std::endl;
+                const Uint8* keyStates = SDL_GetKeyboardState(NULL);
+                if (keyStates[SDL_SCANCODE_D]) {
+                    entities[i]->rect.x += 64;
+                }
             }
         }
     }
@@ -571,11 +584,30 @@ void map_reset() {
 
 // Here e1 is entity 1 and e2 is entity 2.
 // Eg: e1.type is player and e2.type is stone.
-bool has_collided(Entity* e1, Entity* e2) {
+bool player_has_collided(Entity* other, const std::string& direction) {
     
-    /*if()*/
-    return false;
+    SDL_FPoint sensor; // A Collision Sensor.
 
+    if (direction == "right") {
+        sensor = { player->rect.x + SPRITE_SIZE, player->rect.y };
+    }
+    if (direction == "left") {
+        sensor = { player->rect.x - 1, player->rect.y };
+    }
+    if (direction == "up") {
+        sensor = { player->rect.x, player->rect.y - 1 };
+    }
+    if (direction == "down") {
+        sensor = { player->rect.x, player->rect.y + SPRITE_SIZE };
+    }
+
+    if (other->type == "stone") {
+        if (SDL_PointInFRect(&sensor, &other->rect)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool is_collision_with_wall_on(const std::string& that_side, Entity* for_entity) {
