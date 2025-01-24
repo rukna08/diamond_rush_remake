@@ -568,6 +568,16 @@ void map_reset() {
     }
 }
 
+
+// Here e1 is entity 1 and e2 is entity 2.
+// Eg: e1.type is player and e2.type is stone.
+bool has_collided(Entity* e1, Entity* e2) {
+    
+    /*if()*/
+    return false;
+
+}
+
 bool is_collision_with_wall_on(const std::string& that_side, Entity* for_entity) {
 
     SDL_FPoint tile;
