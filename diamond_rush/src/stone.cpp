@@ -9,7 +9,7 @@ Stone::Stone(float x, float y, SDL_Renderer* renderer) {
 		SPRITE_SIZE, SPRITE_SIZE
 	};
 
-	//texture = IMG_LoadTexture(renderer, "data/sprite_stone.png");
+	texture = IMG_LoadTexture(renderer, "data/sprite_stone.png");
 
 	type = "stone";
 
