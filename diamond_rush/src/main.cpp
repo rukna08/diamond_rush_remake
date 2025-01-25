@@ -20,6 +20,7 @@
 #include "stone.h"
 #include "back_wall.h"
 #include "entity.h"
+#include <map>
 
 // Sprite names for display in the engine mode.
 // This corresponds to the below level_item enum and level_sprites.
@@ -36,6 +37,7 @@ enum level_item {
     BACK_WALL,
     STONE
 };
+
 std::vector<SDL_Texture*> level_sprites;
 int current_level_item_to_be_placed = level_item::WALL;
 
@@ -63,6 +65,10 @@ bool is_mouse_held = false;
 bool is_over_side_panel = false;
 std::vector<Entity*> entities;
 
+// Texture handling
+
+std::map<std::string, SDL_Texture*> level_sprites_map;
+
 void draw();
 void process_input();
 void draw_text(std::string text, float x, float y, SDL_Color* color);
@@ -79,6 +85,8 @@ bool is_player_colliding_with_wall_on(const std::string& that_side);
 bool player_has_collided(Entity* other, const std::string& direction);
 void update();
 
+void load_sprite_texture_by_level_name(std::string&);
+SDL_Texture* provideTexture(std::string&);
 
 SDL_Color color_white = { 255, 255, 255, 255 };
 
@@ -117,6 +125,11 @@ int main(int argc, char* argv[]) {
     int start_time = SDL_GetTicks();
     int frame_count = 0;
     int fps = 0;
+
+    //handling which set of textures to load when called.
+    std::string curr_lvl = "angkor";
+    load_sprite_texture_by_level_name(curr_lvl);
+
     while (is_game_running) {                   // Game / Application Loop.
         int current_time = SDL_GetTicks();
         int elapsed_time = (current_time - start_time) / 1000;
@@ -169,8 +182,22 @@ void update() {
         }
     }
     
-
 }
+
+// We can further automate this loading process, more on that later when the game
+// development progresses. Something like maintianing a list of sprites with {type:location}
+// in a file to automatically load them to memory by reding it.
+void load_sprite_texture_by_level_name(std::string& level_name) {
+    if (level_name == "angkor") {
+        level_sprites_map["wall"] = IMG_LoadTexture(renderer, "data/sprite_wall.png");
+        level_sprites_map["stone"] = IMG_LoadTexture(renderer, "data/sprite_stone.png");
+        level_sprites_map["back_wall"] = IMG_LoadTexture(renderer, "data/sprite_back_wall.png");
+    }
+
+    else return;
+}
+
+
 
 std::string current_animation = "player_idle_right";
 int animation_index = 0;
@@ -276,7 +303,7 @@ void update_animation() {
 
 void draw_entities() {
     for (int i = 0; i < entities.size(); i++) {
-        SDL_RenderCopyF(renderer, entities[i]->texture, 0, &entities[i]->rect);
+        SDL_RenderCopyF(renderer, level_sprites_map[entities[i]->type], 0, &entities[i]->rect);
     }
 }
 
