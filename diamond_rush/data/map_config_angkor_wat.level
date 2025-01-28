@@ -334,10 +334,9 @@ stone 1216 384
 wall 1216 384
 back_wall 960 384
 back_wall 896 384
-back_wall 832 384
 back_wall 1024 192
-stone 832 384
 stone 1024 192
 stone 1216 320
 stone 1152 384
-stone 896 128
+back_wall 832 384
+stone 896 384

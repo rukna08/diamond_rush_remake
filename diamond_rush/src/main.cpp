@@ -78,6 +78,7 @@ bool is_collision_with_wall_on(const std::string& that_side, Entity* for_entity)
 bool is_player_colliding_with_wall_on(const std::string& that_side);
 bool player_has_collided(Entity* other, const std::string& direction);
 void update();
+void handle_collision();
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -149,15 +150,8 @@ int main(int argc, char* argv[]) {
 
 void update() {
 
+    handle_collision();
     
-    for (int i = 0; i < entities.size(); i++) {
-        
-        if (entities[i]->type == "stone") {
-            if (player_has_collided(entities[i], "right") && is_player_moving_right) {
-                entities[i]->rect.x += player->speed;
-            }
-        }
-    }
 
     
 
@@ -796,5 +790,20 @@ void draw_engine_side_panel() {
 
     if (!engine_mode) {
         draw_text("(X)   GAME MODE", starting_x, 0, &color_white);
+    }
+}
+
+void handle_collision() {
+    for (int i = 0; i < entities.size(); i++) {
+
+        if (entities[i]->type == "stone") {
+            if (player_has_collided(entities[i], "right") && is_player_moving_right) {
+                entities[i]->rect.x += player->speed;
+            }
+
+            if (player_has_collided(entities[i], "left") && is_player_moving_left) {
+                entities[i]->rect.x -= player->speed;
+            }
+        }
     }
 }
