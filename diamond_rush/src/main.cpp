@@ -50,6 +50,11 @@ bool is_game_running = true;
 const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 char last_key_held = 'w';
 bool is_player_moving = false;
+
+// Using for stone pushing. Refactor later.
+bool is_player_moving_right = false;
+bool is_player_moving_left = false;
+
 // engine_mode = false is game_mode. ;)
 bool engine_mode = false;
 // Side panel starting_x variable.
@@ -144,9 +149,17 @@ int main(int argc, char* argv[]) {
 
 void update() {
 
-    // 0 is NULL here.
-    const Uint8* keyStates = SDL_GetKeyboardState(0);
-    // if (keyStates[SDL_SCANCODE_W])
+    
+    for (int i = 0; i < entities.size(); i++) {
+        
+        if (entities[i]->type == "stone") {
+            if (player_has_collided(entities[i], "right") && is_player_moving_right) {
+                entities[i]->rect.x += player->speed;
+            }
+        }
+    }
+
+    
 
 
     bool move_stone_right = false;
@@ -431,6 +444,7 @@ void process_input() {
             player->rect.x += player->speed;
             last_key_held = 'd';
             is_player_moving = true;
+            is_player_moving_right = true;
             current_animation = "player_walk_right";
         }
 
@@ -440,6 +454,7 @@ void process_input() {
             player->rect.x -= player->speed;
             last_key_held = 'a';
             is_player_moving = true;
+            is_player_moving_left = true;
             current_animation = "player_walk_left";
         }
 
@@ -474,6 +489,7 @@ void process_input() {
             case 'a': {
                 if ((int)player->rect.x % 64 == 0) {
                     is_player_moving = false;
+                    is_player_moving_left = false;
                     current_animation = "player_idle_left";
                 }
                 if ((int)player->rect.x % 64 != 0) {
@@ -493,6 +509,7 @@ void process_input() {
             case 'd': {
                 if ((int)player->rect.x % 64 == 0) {
                     is_player_moving = false;
+                    is_player_moving_right = false;
                     current_animation = "player_idle_right";
                 }
                 if ((int)player->rect.x % 64 != 0) {
