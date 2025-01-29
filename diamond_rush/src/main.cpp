@@ -52,6 +52,8 @@ char last_key_held = 'w';
 bool is_player_moving = false;
 
 // Using for stone pushing. Refactor later.
+bool is_player_moving_up = false;
+bool is_player_moving_down = false;
 bool is_player_moving_right = false;
 bool is_player_moving_left = false;
 
@@ -62,6 +64,9 @@ int starting_x = WINDOW_RES_X - 400;
 bool is_mouse_held = false;
 bool is_over_side_panel = false;
 std::vector<Entity*> entities;
+
+int universal_mouse_x;
+int universal_mouse_y;
 
 void draw();
 void process_input();
@@ -79,6 +84,7 @@ bool is_player_colliding_with_wall_on(const std::string& that_side);
 bool player_has_collided(Entity* other, const std::string& direction);
 void update();
 void handle_collision();
+Entity* get_entity_by_xy(int x, int y);
 
 
 SDL_Color color_white = { 255, 255, 255, 255 };
@@ -150,10 +156,16 @@ int main(int argc, char* argv[]) {
 
 void update() {
 
+    SDL_GetMouseState(&universal_mouse_x, &universal_mouse_y);
+
     handle_collision();
     
 
-    
+    if (is_mouse_held) {
+        if (get_entity_by_xy(universal_mouse_x, universal_mouse_y) != 0) {
+            std::cout << "Entity: " << get_entity_by_xy(universal_mouse_x, universal_mouse_y)->type << "." << std::endl;
+        }
+    }
 
 
     bool move_stone_right = false;
@@ -458,6 +470,7 @@ void process_input() {
             player->rect.y -= player->speed;
             last_key_held = 'w';
             is_player_moving = true;
+            is_player_moving_up = true;
         }
 
         if (!is_player_colliding_with_wall_on("down") && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
@@ -466,6 +479,7 @@ void process_input() {
             player->rect.y += player->speed;
             last_key_held = 's';
             is_player_moving = true;
+            is_player_moving_down = true;
         }
     }
 
@@ -594,8 +608,6 @@ void map_reset() {
 }
 
 
-// Here e1 is entity 1 and e2 is entity 2.
-// Eg: e1.type is player and e2.type is stone.
 bool player_has_collided(Entity* other, const std::string& direction) {
     
     SDL_FPoint sensor; // A Collision Sensor.
@@ -806,4 +818,15 @@ void handle_collision() {
             }
         }
     }
+}
+
+Entity* get_entity_by_xy(int x, int y) {
+    SDL_FPoint point = { x, y };
+    for (int i = 0; i < entities.size(); i++) {
+        if (entities[i]->type != "back_wall" && SDL_PointInFRect(&point, &entities[i]->rect)) {
+            return entities[i];
+        }
+    }
+    // 0 is null.
+    return 0;
 }
