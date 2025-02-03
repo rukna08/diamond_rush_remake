@@ -158,8 +158,14 @@ void update() {
 
     SDL_GetMouseState(&universal_mouse_x, &universal_mouse_y);
 
+    
+    
+    
     handle_collision();
     
+
+
+
 
     if (is_mouse_held) {
         if (get_entity_by_xy(universal_mouse_x, universal_mouse_y) != 0) {
@@ -167,29 +173,13 @@ void update() {
         }
     }
 
-
-    bool move_stone_right = false;
-
     if (!engine_mode) {
         for (int i = 0; i < entities.size(); i++) {
             if (entities[i]->type == "stone") {
                 entities[i]->fall(is_collision_with_wall_on("down", entities[i]));
             }
-
-            if (player_has_collided(entities[i], "right")) {
-                std::cout << "Player just collided with a stone." << std::endl;
-                const Uint8* keyStates = SDL_GetKeyboardState(NULL);
-                
-                if (keyStates[SDL_SCANCODE_D]) {
-                    move_stone_right = true;
-                }
-            }
         }
-
-        
     }
-    
-
 }
 
 std::string current_animation = "player_idle_right";
