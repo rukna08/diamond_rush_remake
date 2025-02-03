@@ -159,9 +159,12 @@ void update() {
     SDL_GetMouseState(&universal_mouse_x, &universal_mouse_y);
 
     
+    static bool dont_handle_collision = false;
     
-    
-    handle_collision();
+    if (!dont_handle_collision) {
+        handle_collision();
+    }
+
     
 
 
@@ -170,7 +173,10 @@ void update() {
     if (is_mouse_held) {
         if (get_entity_by_xy(universal_mouse_x, universal_mouse_y) != 0) {
             std::cout << "Entity: " << get_entity_by_xy(universal_mouse_x, universal_mouse_y)->type << "." << std::endl;
+            dont_handle_collision = true;
         }
+    } else {
+        dont_handle_collision = false;
     }
 
     if (!engine_mode) {
@@ -437,11 +443,24 @@ void process_input() {
         if (!is_player_colliding_with_wall_on("right") && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && key_state[SDL_SCANCODE_D]) 
         {
-            player->rect.x += player->speed;
-            last_key_held = 'd';
-            is_player_moving = true;
-            is_player_moving_right = true;
-            current_animation = "player_walk_right";
+            // When stones are one after the other, we don't want it to move.
+            // So this is a hack right now.
+            if (get_entity_by_xy(player->rect.x + 65, player->rect.y) != 0 && get_entity_by_xy(player->rect.x + 65 + 65, player->rect.y) != 0) {
+                if (get_entity_by_xy(player->rect.x + 65, player->rect.y)->type != "stone" && get_entity_by_xy(player->rect.x + 65 + 65, player->rect.y)->type != "stone") {
+                    player->rect.x += player->speed;
+                    last_key_held = 'd';
+                    is_player_moving = true;
+                    is_player_moving_right = true;
+                    current_animation = "player_walk_right";
+                }
+            } else {
+                player->rect.x += player->speed;
+                last_key_held = 'd';
+                is_player_moving = true;
+                is_player_moving_right = true;
+                current_animation = "player_walk_right";
+            }
+
         }
 
         if (!is_player_colliding_with_wall_on("left") && !key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
