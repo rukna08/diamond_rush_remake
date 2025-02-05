@@ -468,6 +468,8 @@ void process_input() {
         {    
             
 
+            // EXTREMELY Hacky numbers... 63 what does that even mean? But it works.
+            // Refactor it later you know. https://www.youtube.com/watch?v=SETnK2ny1R0
             if (get_entity_by_xy(player->rect.x - 63, player->rect.y) != 0 && get_entity_by_xy(player->rect.x - 63 - 63, player->rect.y) != 0) {
                 if (get_entity_by_xy(player->rect.x - 63, player->rect.y)->type != "stone" && get_entity_by_xy(player->rect.x - 63 - 63, player->rect.y)->type != "stone") {
                     player->rect.x -= player->speed;
