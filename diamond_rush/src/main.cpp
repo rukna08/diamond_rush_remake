@@ -466,11 +466,23 @@ void process_input() {
         if (!is_player_colliding_with_wall_on("left") && !key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
             !key_state[SDL_SCANCODE_S] && !key_state[SDL_SCANCODE_D]) 
         {    
-            player->rect.x -= player->speed;
-            last_key_held = 'a';
-            is_player_moving = true;
-            is_player_moving_left = true;
-            current_animation = "player_walk_left";
+            
+
+            if (get_entity_by_xy(player->rect.x - 63, player->rect.y) != 0 && get_entity_by_xy(player->rect.x - 63 - 63, player->rect.y) != 0) {
+                if (get_entity_by_xy(player->rect.x - 63, player->rect.y)->type != "stone" && get_entity_by_xy(player->rect.x - 63 - 63, player->rect.y)->type != "stone") {
+                    player->rect.x -= player->speed;
+                    last_key_held = 'a';
+                    is_player_moving = true;
+                    is_player_moving_left = true;
+                    current_animation = "player_walk_left";
+                }
+            } else {
+                player->rect.x -= player->speed;
+                last_key_held = 'a';
+                is_player_moving = true;
+                is_player_moving_left = true;
+                current_animation = "player_walk_left";
+            }
         }
 
         if (!is_player_colliding_with_wall_on("up") && key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
