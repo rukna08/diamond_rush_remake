@@ -86,7 +86,9 @@ void update();
 void handle_collision();
 Entity* get_entity_by_xy(int x, int y);
 
-
+void draw_zone();
+bool is_player_inside_zone();
+void set_player_pos();
 SDL_Color color_white = { 255, 255, 255, 255 };
 
 #define DEBUG 1
@@ -192,9 +194,9 @@ std::string current_animation = "player_idle_right";
 int animation_index = 0;
 float animation_speed = 150;
 void draw() {
-
+   
     draw_entities();
-
+    draw_zone();
     // Call this only inside !engine_mode.
     play_animation(current_animation);
 
@@ -460,7 +462,9 @@ void process_input() {
                 is_player_moving_right = true;
                 current_animation = "player_walk_right";
             }
-
+            
+            if (!is_player_inside_zone()) set_player_pos();
+            
         }
 
         if (!is_player_colliding_with_wall_on("left") && !key_state[SDL_SCANCODE_W] && key_state[SDL_SCANCODE_A] &&
@@ -485,6 +489,7 @@ void process_input() {
                 is_player_moving_left = true;
                 current_animation = "player_walk_left";
             }
+            if (!is_player_inside_zone()) set_player_pos();
         }
 
         if (!is_player_colliding_with_wall_on("up") && key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
@@ -494,6 +499,7 @@ void process_input() {
             last_key_held = 'w';
             is_player_moving = true;
             is_player_moving_up = true;
+            if (!is_player_inside_zone()) set_player_pos();
         }
 
         if (!is_player_colliding_with_wall_on("down") && !key_state[SDL_SCANCODE_W] && !key_state[SDL_SCANCODE_A] &&
@@ -503,6 +509,7 @@ void process_input() {
             last_key_held = 's';
             is_player_moving = true;
             is_player_moving_down = true;
+            if (!is_player_inside_zone()) set_player_pos();
         }
     }
 
@@ -853,3 +860,66 @@ Entity* get_entity_by_xy(int x, int y) {
     // 0 is null.
     return 0;
 }
+
+
+// camera_reset during game mode.
+struct zone_bound {
+    int top;
+    int bottom;
+    int left;
+    int right;
+};
+
+zone_bound bound = { 64,512,64,768};
+const int offset = 0;
+const int loc_x = offset + SPRITE_SIZE;
+const int loc_y = offset + SPRITE_SIZE;
+
+int height = 64 * 12;
+int width = 64 * 8;
+SDL_Rect zone = { loc_x, loc_y, height, width };
+
+
+void draw_zone() {
+    
+    // draw the zone for reference in engine mode, but not is game mode.
+    //if (engine_mode) {
+        SDL_SetRenderDrawColor(renderer, 100, 150, 255, 100);
+        SDL_RenderFillRect(renderer, &zone);
+        SDL_RenderDrawRect(renderer, &zone);
+    //}
+}
+
+char bound_wall = '\0';
+bool is_player_inside_zone() {
+    int x = player->rect.x;
+    int y = player->rect.y;
+
+    if (x < 64) { bound_wall = 'L'; return false; }
+    if (x > 768) { bound_wall = 'R'; return false; }
+    if (y < 64) { bound_wall = 'U'; return false; }
+    if (y > 512) { bound_wall = 'B'; return false; }
+
+    bound_wall = '\0';
+    return true;
+}
+
+void set_player_pos() {
+        std::cout << "Player outside zone!!! " << bound_wall << " hitted!\n";
+        // it can identify which wall is getting hitted, now to 
+        // add logic to move camera.
+        int step = 10;
+        if (bound_wall == 'U') {
+            
+        }
+        else if (bound_wall == 'B') {
+
+        }
+        else if (bound_wall == 'R') {
+
+        }
+        else {
+
+        }
+}
+
