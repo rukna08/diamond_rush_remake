@@ -908,10 +908,17 @@ void set_player_pos() {
         std::cout << "Player outside zone!!! " << bound_wall << " hitted!\n";
         // it can identify which wall is getting hitted, now to 
         // add logic to move camera.
-        int step = 10;
-        if (bound_wall == 'U') {
-            
-        }
+        int step = 64; // this actually creates the offset setting it multiple of 64 solves it partially.
+
+            if (bound_wall == 'U') {
+                while (step) {
+                    for (int i = 0; i < entities.size(); i++) {
+                        if (entities[i]->type == "player") entities[i]->rect.y++;
+                        else entities[i]->rect.y--;
+                    }
+                    step--;
+                }
+            }
         else if (bound_wall == 'B') {
 
         }
