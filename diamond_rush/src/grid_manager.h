@@ -3,6 +3,7 @@
 #include "wall.h"
 #include "back_wall.h"
 #include "stone.h"
+#include "grass.h"
 
 #include <SDL.h>
 #include <vector>

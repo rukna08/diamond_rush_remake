@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\back_wall.cpp" />
+    <ClCompile Include="src\grass.cpp" />
     <ClCompile Include="src\grid_manager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\map_manager.cpp" />
@@ -143,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\back_wall.h" />
+    <ClInclude Include="src\grass.h" />
     <ClInclude Include="src\grid_manager.h" />
     <ClInclude Include="src\map_manager.h" />
     <ClInclude Include="src\wall.h" />

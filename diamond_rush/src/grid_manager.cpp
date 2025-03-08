@@ -51,5 +51,12 @@ void place_entity(float x, float y, const std::string& type, std::vector<Entity*
 		}
 		entities.push_back(new Stone(x, y, renderer));
 	}
-
+	if (type == "grass") {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities[i]->type == "grass" && entities[i]->rect.x == x && entities[i]->rect.y == y) {
+				return;
+			}
+		}
+		entities.push_back(new Grass(x, y, renderer));
+	}
 }

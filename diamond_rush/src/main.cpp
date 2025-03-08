@@ -22,14 +22,16 @@ std::vector<std::string> sprite_names = {
     "Player",
     "Wall",
     "Back Wall",
-    "Stone"
+    "Stone",
+    "Grass"
 };
 // level_item::PLAYER starts from 0.
 enum level_item {
     PLAYER,
     WALL,
     BACK_WALL,
-    STONE
+    STONE,
+    GRASS
 };
 std::vector<SDL_Texture*> level_sprites;
 int current_level_item_to_be_placed = level_item::WALL;
@@ -84,6 +86,8 @@ bool is_player_colliding_with_wall_on(const std::string& that_side);
 bool player_has_collided(Entity* other, const std::string& direction);
 void update();
 void handle_collision();
+void handle_grass();
+
 Entity* get_entity_by_xy(int x, int y);
 
 void draw_zone();
@@ -122,6 +126,8 @@ int main(int argc, char* argv[]) {
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_wall.png"));
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_back_wall.png"));
     level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_stone.png"));
+    level_sprites.push_back(IMG_LoadTexture(renderer, "data/sprite_grass.png"));
+
 
     int start_time = SDL_GetTicks();
     int frame_count = 0;
@@ -136,6 +142,7 @@ int main(int argc, char* argv[]) {
         update();
         draw();
         
+        if (!engine_mode) handle_grass();
 
         frame_count++;
         if (elapsed_time >= 1.0f) {             // if 1 second has elapsed, how many frames have been drawn?
@@ -322,6 +329,9 @@ void process_input() {
                         if (current_level_item_to_be_placed == level_item::STONE) {
                             place_entity(level_grid[i]->x, level_grid[i]->y, "stone", entities, renderer);
                         }
+                        if (current_level_item_to_be_placed == level_item::GRASS) {
+                            place_entity(level_grid[i]->x, level_grid[i]->y, "grass", entities, renderer);
+                        }
                     }
                 }
             }
@@ -473,7 +483,7 @@ void process_input() {
             
 
             // EXTREMELY Hacky numbers... 63 what does that even mean? But it works.
-            // Refactor it later you know. https://www.youtube.com/watch?v=SETnK2ny1R0
+            // Refactor it later you know. https://www.youtube.com/watch?v=SETnK2ny1R0 What the fuck ??
             if (get_entity_by_xy(player->rect.x - 63, player->rect.y) != 0 && get_entity_by_xy(player->rect.x - 63 - 63, player->rect.y) != 0) {
                 if (get_entity_by_xy(player->rect.x - 63, player->rect.y)->type != "stone" && get_entity_by_xy(player->rect.x - 63 - 63, player->rect.y)->type != "stone") {
                     player->rect.x -= player->speed;
@@ -842,24 +852,25 @@ void handle_collision() {
             if (player_has_collided(entities[i], "right") && is_player_moving_right) {
                 entities[i]->rect.x += player->speed;
             }
-
+            
             if (player_has_collided(entities[i], "left") && is_player_moving_left) {
                 entities[i]->rect.x -= player->speed;
             }
+            
         }
     }
 }
 
-Entity* get_entity_by_xy(int x, int y) {
-    SDL_FPoint point = { x, y };
-    for (int i = 0; i < entities.size(); i++) {
-        if (entities[i]->type != "back_wall" && SDL_PointInFRect(&point, &entities[i]->rect)) {
-            return entities[i];
+    Entity* get_entity_by_xy(int x, int y) {
+        SDL_FPoint point = { x, y };
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities[i]->type != "back_wall" && SDL_PointInFRect(&point, &entities[i]->rect)) {
+                return entities[i];
+            }
         }
+        // 0 is null.
+        return 0;
     }
-    // 0 is null.
-    return 0;
-}
 
 
 // camera_reset during game mode.
@@ -904,8 +915,10 @@ bool is_player_inside_zone() {
     return true;
 }
 
+
 void set_player_pos() {
-        std::cout << "Player outside zone!!! " << bound_wall << " hitted!\n";
+    /*
+    std::cout << "Player outside zone!!! " << bound_wall << " hitted!\n";
         // it can identify which wall is getting hitted, now to 
         // add logic to move camera.
         int step = 64; // this actually creates the offset setting it multiple of 64 solves it partially.
@@ -928,5 +941,14 @@ void set_player_pos() {
         else {
 
         }
+        */
 }
 
+
+void handle_grass() {
+    int x = player->rect.x;
+    int y = player->rect.y;
+    Entity* ent = get_entity_by_xy(x,y);
+    if (ent != 0 && ent->type == "grass") std::cout << "Trampled on grass\n";
+    
+}
