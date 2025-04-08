@@ -951,7 +951,7 @@ void handle_grass() {
     Entity* ent = get_entity_by_xy(x,y);
 	if (ent != 0 && ent->type == "grass") {
 		std::cout << "Trampled on grass\n";
-		remove_entity(x, y, entities);
+		remove_grass(x, y, entities);
 	}
     
 }

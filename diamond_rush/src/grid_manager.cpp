@@ -26,6 +26,16 @@ void remove_entity(float x, float y, std::vector<Entity*>& entities) {
 	}
 }
 
+void remove_grass(float x, float y, std::vector<Entity*>& entities) {
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i]->rect.x == x && entities[i]->rect.y == y && entities[i]->type == "grass") {
+			entities.erase(entities.begin() + i);
+		}
+	}
+}
+
+
+
 void place_entity(float x, float y, const std::string& type, std::vector<Entity*>& entities, SDL_Renderer* renderer) {	
 	if (type == "wall") {
 		for (int i = 0; i < entities.size(); i++) {
